@@ -60,6 +60,29 @@ describe('resolve', function () {
         });
     });
 
+    it('should allow entity to depend on multiple entities', function () {
+        var decl = [
+                { block: 'A' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    dependOn: [
+                        {
+                            entity: { block: 'B' }
+                        },
+                        {
+                            entity: { block: 'C' }
+                        }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
+            dependOn: []
+        });
+    });
+
     it('should place dependence before dependants', function () {
         var decl = [
                 { block: 'A' },
