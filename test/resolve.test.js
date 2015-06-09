@@ -159,7 +159,7 @@ describe('resolve', function () {
         bemDeps.resolve(decl, deps).must.throw('Unable to process deps: detected cyclic reference A <- B <- A');
     });
 
-    it('should not allow indirect cyclic depencencies', function () {
+    it('should not allow indirect cyclic dependencies', function () {
         var decl = [
                 { block: 'A' },
                 { block: 'B' },
