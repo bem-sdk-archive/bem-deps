@@ -83,6 +83,28 @@ describe('resolve', function () {
         });
     });
 
+    it('should ignore entity depend on itself', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' },
+                { block: 'C' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    dependOn: [
+                        {
+                            entity: { block: 'A' }
+                        }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
+            dependOn: []
+        });
+    });
+
     it('should place dependence before dependants', function () {
         var decl = [
                 { block: 'A' },
