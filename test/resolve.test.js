@@ -218,4 +218,23 @@ describe('resolve', function () {
             ];
         bemDeps.resolve(decl, deps).must.throw('Unable to process deps: detected cyclic reference A <- B <- C <- A');
     });
+
+    it('should build deps list for specific tech if specified', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    dependOn: [
+                        { entity: { block: 'C' } }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps, { tech: 'css' }).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
+            dependOn: []
+        });
+    });
 });
