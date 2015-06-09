@@ -219,7 +219,7 @@ describe('resolve', function () {
         bemDeps.resolve(decl, deps).must.throw('Unable to process deps: detected cyclic reference A <- B <- C <- A');
     });
 
-    it('should build deps list for specific tech if specified', function () {
+    it('should build deps list for specific tech if it\'s specified', function () {
         var decl = [
                 { block: 'A' },
                 { block: 'B' }
@@ -236,5 +236,53 @@ describe('resolve', function () {
             entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
             dependOn: []
         });
+    });
+
+    it('should allow tech in entity to depend on another entity', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    tech: 'css',
+                    dependOn: [
+                        { entity: { block: 'C' } }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
+            dependOn: []
+        });
+    });
+
+    it('should allow tech in one entity to depend on a tech in another entity', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    tech: 'css',
+                    dependOn: [
+                        {
+                            entity: { block: 'C' },
+                            tech: 'js'
+                        }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
+            dependOn: [
+                {
+                    tech: 'js',
+                    entities: [{ block: 'C' }]
+                }
+            ]
+        })
     });
 });
