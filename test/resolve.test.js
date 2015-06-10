@@ -252,13 +252,14 @@ describe('resolve', function () {
                     ]
                 }
             ];
-        bemDeps.resolve(decl, deps).must.be.eql({
+        bemDeps.resolve(decl, deps, { tech: 'css' }).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
             dependOn: []
         });
     });
 
-    it('should allow tech in one entity to depend on a tech in another entity', function () {
+    it('should ignore all dependencies of specific tech of entity depend on another entities if no tech to resolve' +
+        ' specified', function () {
         var decl = [
                 { block: 'A' },
                 { block: 'B' }
@@ -266,7 +267,79 @@ describe('resolve', function () {
             deps = [
                 {
                     entity: { block: 'A' },
-                    tech: 'css',
+                    tech: 'js',
+                    dependOn: [
+                        { entity: { block: 'C' } }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }],
+            dependOn: []
+        });
+    });
+
+    it('should ignore all dependencies of specific tech of entity depend on another entities if no tech to resolve ' +
+        'specified and ordering set', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    tech: 'js',
+                    dependOn: [
+                        {
+                            entity: { block: 'C' },
+                            order: 'dependenceBeforeDependants'
+                        }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }],
+            dependOn: []
+        });
+    });
+
+    it('should allow tech in one entity to depend on another tech in another entity', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    tech: 'js',
+                    dependOn: [
+                        {
+                            entity: { block: 'C' },
+                            tech: 'css'
+                        }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }],
+            dependOn: [
+                {
+                    entity: { block: 'C' },
+                    tech: 'css'
+                }
+            ]
+        });
+    });
+
+    it('should add tech dependency to entities list if this tech is the tech for which dependencies ' +
+        'resolving now', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
                     dependOn: [
                         {
                             entity: { block: 'C' },
@@ -275,14 +348,9 @@ describe('resolve', function () {
                     ]
                 }
             ];
-        bemDeps.resolve(decl, deps).must.be.eql({
+        bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
-            dependOn: [
-                {
-                    tech: 'js',
-                    entities: [{ block: 'C' }]
-                }
-            ]
-        })
+            dependOn: []
+        });
     });
 });
