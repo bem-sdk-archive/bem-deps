@@ -331,8 +331,8 @@ describe('resolve', function () {
         });
     });
 
-    it('should add tech dependency to entities list if this tech is the tech for which dependencies ' +
-        'resolving now', function () {
+    it('should add tech dependency to entities list if this tech matching tech for which dependencies ' +
+        'are being resolved now', function () {
         var decl = [
                 { block: 'A' },
                 { block: 'B' }
@@ -353,4 +353,6 @@ describe('resolve', function () {
             dependOn: []
         });
     });
+
+    it('');
 });
