@@ -2,7 +2,7 @@ var bemDeps = require('../lib/deps');
 
 describe('resolve', function () {
     it('should not process empty decl list', function () {
-        bemDeps.resolve()
+        (function () { bemDeps.resolve(); })
             .must.throw('The decl list is empty or not defined. It\'s impossible to to resolve empty decl list');
     });
 
@@ -40,13 +40,11 @@ describe('resolve', function () {
 
     it('should not include dependency if it\'s missing in decl and nobody from decl references it', function () {
         var decl = [
-                { block: 'A' },
-                { block: 'B' },
-                { block: 'C' }
+                { block: 'A' }
             ],
             deps = [
                 {
-                    entity: { block: 'D' },
+                    entity: { block: 'B' },
                     dependOn: [
                         {
                             entity: { block: 'A' }
@@ -55,7 +53,7 @@ describe('resolve', function () {
                 }
             ];
         bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
+            entities: [{ block: 'A' }],
             dependOn: []
         });
     });
