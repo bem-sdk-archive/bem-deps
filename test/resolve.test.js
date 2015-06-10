@@ -176,7 +176,8 @@ describe('resolve', function () {
                     ]
                 }
             ];
-        bemDeps.resolve(decl, deps).must.throw('Unable to process deps: detected cyclic reference A <- B <- A');
+        (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+            ' reference A <- B <- A');
     });
 
     it('should not allow indirect cyclic dependencies', function () {
@@ -214,7 +215,8 @@ describe('resolve', function () {
                     ]
                 }
             ];
-        bemDeps.resolve(decl, deps).must.throw('Unable to process deps: detected cyclic reference A <- B <- C <- A');
+        (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
+            ' A <- B <- C <- A');
     });
 
     it('should build deps list for specific tech if it\'s specified', function () {
