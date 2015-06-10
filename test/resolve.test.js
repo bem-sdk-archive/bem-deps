@@ -21,19 +21,18 @@ describe('resolve', function () {
         var decl = [
                 { block: 'A' },
                 { block: 'B' },
-                { block: 'C' },
-                { block: 'D' }
+                { block: 'C' }
             ],
             deps = [
                 {
                     entity: { block: 'C' },
                     dependOn: {
-                        entity: { block: 'E' }
+                        entity: { block: 'D' }
                     }
                 }
             ];
         bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }, { block: 'D' }, { block: 'E' }],
+            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }, { block: 'D' }],
             dependOn: []
         });
     });
