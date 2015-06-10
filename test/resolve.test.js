@@ -376,4 +376,40 @@ describe('resolve', function () {
             dependOn: []
         });
     });
+
+    it('should allow tech to depend on several other techs', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    tech: 'js',
+                    dependOn: [
+                        {
+                            entity: { block: 'C' },
+                            tech: 'css'
+                        },
+                        {
+                            entity: { block: 'D' },
+                            tech: 'bh'
+                        }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }],
+            dependOn: [
+                {
+                    entities: [{ block: 'C' }],
+                    tech: 'css'
+                },
+                {
+                    entities: [{ block: 'D' }],
+                    tech: 'bh'
+                }
+            ]
+        });
+    });
 });
