@@ -324,7 +324,7 @@ describe('resolve', function () {
             entities: [{ block: 'A' }, { block: 'B' }],
             dependOn: [
                 {
-                    entity: { block: 'C' },
+                    entities: [{ block: 'C' }],
                     tech: 'css'
                 }
             ]
