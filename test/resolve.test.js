@@ -212,6 +212,45 @@ describe('resolve', function () {
             ' A <- B <- C <- A');
     });
 
+    it('should not allow intermediate cyclic dependencies', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' },
+                { block: 'C' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    dependOn: [
+                        {
+                            entity: { block: 'B' },
+                            order: 'dependenceBeforeDependants'
+                        }
+                    ]
+                },
+                {
+                    entity: { block: 'B' },
+                    dependOn: [
+                        {
+                            entity: { block: 'C' },
+                            order: 'dependenceBeforeDependants'
+                        }
+                    ]
+                },
+                {
+                    entity: { block: 'C' },
+                    dependOn: [
+                        {
+                            entity: { block: 'B' },
+                            order: 'dependenceBeforeDependants'
+                        }
+                    ]
+                }
+            ];
+        (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
+            ' B <- C <- B');
+    });
+
     it('should build deps list for specific tech if it\'s specified', function () {
         var decl = [
                 { block: 'A' },
