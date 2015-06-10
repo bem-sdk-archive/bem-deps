@@ -447,8 +447,7 @@ describe('resolve', function () {
 
     it('should ignore tech dependencies not matching with tech being resolved', function () {
         var decl = [
-                { block: 'A' },
-                { block: 'B' }
+                { block: 'A' }
             ],
             deps = [
                 {
@@ -463,15 +462,14 @@ describe('resolve', function () {
                 }
             ];
         bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }],
+            entities: [{ block: 'A' }],
             dependOn: []
         });
     });
 
     it('should ignore tech dependencies not matching with tech being resolved when ordering set', function () {
         var decl = [
-                { block: 'A' },
-                { block: 'B' }
+                { block: 'A' }
             ],
             deps = [
                 {
@@ -487,7 +485,7 @@ describe('resolve', function () {
                 }
             ];
         bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }],
+            entities: [{ block: 'A' }],
             dependOn: []
         });
     });
