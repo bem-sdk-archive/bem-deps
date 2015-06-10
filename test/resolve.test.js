@@ -112,15 +112,12 @@ describe('resolve', function () {
                         {
                             entity: { block: 'B' },
                             order: 'dependenceBeforeDependants'
-                        },
-                        {
-                            entity: { block: 'C' }
                         }
                     ]
                 }
             ];
         bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'B' }, { block: 'A' }, { block: 'C' }],
+            entities: [{ block: 'B' }, { block: 'A' }],
             dependOn: []
         });
     });
@@ -129,21 +126,20 @@ describe('resolve', function () {
         var decl = [
            { block: 'A' },
            { block: 'B' },
-           { block: 'C' },
-           { block: 'D' }
+           { block: 'C' }
 
         ],
         deps = [
             {
                 entity: { block: 'B' },
                 dependOn: {
-                    entity: { block: 'D' },
+                    entity: { block: 'С' },
                     order: 'dependenceBeforeDependants'
                 }
             }
         ];
         bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'D' }, { block: 'B' }, { block: 'C' }],
+            entities: [{ block: 'A' }, { block: 'С' }, { block: 'B' }],
             dependOn: []
         });
     });
