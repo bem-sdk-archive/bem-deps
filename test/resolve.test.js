@@ -354,5 +354,26 @@ describe('resolve', function () {
         });
     });
 
-    it('');
+    it('should keep order for tech dependencies same with resolving tech', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    dependOn: [
+                        {
+                            entity: { block: 'C' },
+                            tech: 'js',
+                            order: 'dependenceBeforeDependants'
+                        }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
+            entities: [{ block: 'C' }, { block: 'A' }, { block: 'B' }],
+            dependOn: []
+        });
+    });
 });
