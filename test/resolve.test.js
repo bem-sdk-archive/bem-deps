@@ -85,9 +85,7 @@ describe('resolve', function () {
 
     it('should ignore entity depend on itself', function () {
         var decl = [
-                { block: 'A' },
-                { block: 'B' },
-                { block: 'C' }
+                { block: 'A' }
             ],
             deps = [
                 {
@@ -100,7 +98,7 @@ describe('resolve', function () {
                 }
             ];
         bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
+            entities: [{ block: 'A' }],
             dependOn: []
         });
     });
