@@ -31,6 +31,7 @@ describe('resolve', function () {
                     }
                 }
             ];
+
         bemDeps.resolve(decl, deps).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }, { block: 'D' }],
             dependOn: []
@@ -51,6 +52,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps).must.be.eql({
             entities: [{ block: 'A' }],
             dependOn: []
@@ -74,6 +76,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
             dependOn: []
@@ -94,6 +97,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps).must.be.eql({
             entities: [{ block: 'A' }],
             dependOn: []
@@ -116,6 +120,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps).must.be.eql({
             entities: [{ block: 'B' }, { block: 'A' }],
             dependOn: []
@@ -138,6 +143,7 @@ describe('resolve', function () {
                 }
             }
         ];
+
         bemDeps.resolve(decl, deps).must.be.eql({
             entities: [{ block: 'A' }, { block: 'С' }, { block: 'B' }],
             dependOn: []
@@ -169,6 +175,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
             ' reference A <- B <- A');
     });
@@ -208,6 +215,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
             ' A <- B <- C <- A');
     });
@@ -247,6 +255,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
             ' B <- C <- B');
     });
@@ -264,6 +273,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps, { tech: 'css' }).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
             dependOn: []
@@ -284,6 +294,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps, { tech: 'css' }).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
             dependOn: []
@@ -305,6 +316,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }],
             dependOn: []
@@ -329,6 +341,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }],
             dependOn: []
@@ -352,6 +365,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }],
             dependOn: [
@@ -380,6 +394,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
             dependOn: []
@@ -403,6 +418,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
             entities: [{ block: 'C' }, { block: 'A' }, { block: 'B' }],
             dependOn: []
@@ -430,6 +446,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
             entities: [{ block: 'A' }, { block: 'B' }],
             dependOn: [
@@ -461,6 +478,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
             entities: [{ block: 'A' }],
             dependOn: []
@@ -484,6 +502,7 @@ describe('resolve', function () {
                     ]
                 }
             ];
+
         bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
             entities: [{ block: 'A' }],
             dependOn: []
