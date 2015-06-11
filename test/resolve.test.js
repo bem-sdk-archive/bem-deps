@@ -33,7 +33,7 @@ function isAddedToDependOn (resolved, entity) {
     });
 }
 
-function isAddedToResolved (resolved, entity) {
+function isEntityAdded (resolved, entity) {
     return isAddedToEntities(resolved, entity) || isAddedToDependOn(resolved, entity);
 }
 
@@ -97,7 +97,7 @@ describe('resolve', function () {
             resolved = null;
 
         resolved = bemDeps.resolve(decl, deps);
-        isAddedToResolved(resolved, { block: 'B' }).must.be.false();
+        isEntityAdded(resolved, { block: 'B' }).must.be.false();
     });
 
     it('should keep the recommended entities ordering described in decl', function () {
