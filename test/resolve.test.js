@@ -161,7 +161,7 @@ describe('resolve', function () {
         });
     });
 
-    it('should not allow direct cyclic dependencies', function () {
+    it('should throw error if detected direct cyclic dependencies', function () {
         var decl = [
                 { block: 'A' },
                 { block: 'B' }
@@ -191,7 +191,7 @@ describe('resolve', function () {
             ' reference A <- B <- A');
     });
 
-    it('should not allow indirect cyclic dependencies', function () {
+    it('should throw error if detected indirect cyclic dependencies', function () {
         var decl = [
                 { block: 'A' },
                 { block: 'B' },
@@ -231,7 +231,7 @@ describe('resolve', function () {
             ' A <- B <- C <- A');
     });
 
-    it('should not allow intermediate cyclic dependencies', function () {
+    it('should throw error if detected intermediate cyclic dependencies', function () {
         var decl = [
                 { block: 'A' },
                 { block: 'B' },
