@@ -26,9 +26,9 @@ describe('resolve', function () {
             deps = [
                 {
                     entity: { block: 'C' },
-                    dependOn: {
-                        entity: { block: 'D' }
-                    }
+                    dependOn: [
+                        { entity: { block: 'D' } }
+                    ]
                 }
             ];
 
