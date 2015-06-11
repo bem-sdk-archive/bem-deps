@@ -33,6 +33,10 @@ function isAddedToDependOn (resolved, entity) {
     });
 }
 
+function isAddedToResolved (resolved, entity) {
+    return isAddedToEntities(resolved, entity) || isAddedToDependOn(resolved, entity);
+}
+
 describe('resolve', function () {
     it('should not process empty decl list', function () {
         (function () { bemDeps.resolve(); })
@@ -74,7 +78,7 @@ describe('resolve', function () {
             resolved = null;
 
         resolved = bemDeps.resolve(decl, deps);
-        isAddedToEntities(resolved, { block: 'B' }).must.be.false();
+        isAddedToResolved(resolved, { block: 'B' }).must.be.false();
     });
 
     it('should keep the recommended entities ordering described in decl', function () {
