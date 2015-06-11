@@ -25,7 +25,8 @@
     "jshint": "2.8.0",
     "matcha": "0.6.0",
     "mocha": "2.2.5",
-    "must": "0.12.0"
+    "must": "0.12.0",
+    "bem-naming": "0.5.1"
   },
   "scripts": {
     "test": "npm run lint && npm run unit",
