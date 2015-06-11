@@ -47,6 +47,19 @@ describe('resolve', function () {
         });
     });
 
+    it('should keep the recommended entities ordering described in decl', function () {
+        var decl = [
+                { block: 'A' },
+                { block: 'B' },
+                { block: 'C' }
+            ],
+            deps = [];
+        bemDeps.resolve(decl, deps).must.be.eql({
+            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
+            dependOn: []
+        });
+    });
+
     it('should allow entity to depend on multiple entities', function () {
         var decl = [
                 { block: 'A' }
