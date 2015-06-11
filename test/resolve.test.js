@@ -46,9 +46,7 @@ describe('resolve', function () {
                 {
                     entity: { block: 'B' },
                     dependOn: [
-                        {
-                            entity: { block: 'A' }
-                        }
+                        { entity: { block: 'A' } }
                     ]
                 }
             ];
@@ -67,12 +65,8 @@ describe('resolve', function () {
                 {
                     entity: { block: 'A' },
                     dependOn: [
-                        {
-                            entity: { block: 'B' }
-                        },
-                        {
-                            entity: { block: 'C' }
-                        }
+                        { entity: { block: 'B' } },
+                        { entity: { block: 'C' } }
                     ]
                 }
             ];
@@ -91,9 +85,7 @@ describe('resolve', function () {
                 {
                     entity: { block: 'A' },
                     dependOn: [
-                        {
-                            entity: { block: 'A' }
-                        }
+                        { entity: { block: 'A' } }
                     ]
                 }
             ];
