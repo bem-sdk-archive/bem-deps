@@ -8,8 +8,7 @@ describe('resolve', function () {
 
     it('should return identical decl list if no deps specified', function () {
         var decl = [
-            { block: 'A' },
-            { block: 'B' }
+            { block: 'A' }
         ];
         bemDeps.resolve(decl).must.be.eql({
             entities: decl,
