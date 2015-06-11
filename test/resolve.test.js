@@ -387,7 +387,7 @@ describe('resolve', function () {
         });
     });
 
-    it('should ignore all dependencies of specific tech of entity depend on another entities if no tech to resolve ' +
+    it('should ignore dependency when tech of entity depend on another entities if no tech to resolve ' +
         'specified and ordering set', function () {
         var decl = [
                 { block: 'A' },
