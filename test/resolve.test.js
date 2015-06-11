@@ -44,10 +44,9 @@ function isEntityBeforeEntity(resolved, first, second) {
 
     var entities = resolved.entities.map(function (entity) {
         return naming.stringify(entity);
-    });
-
-    firstIndex = entities.indexOf(naming.stringify(first));
-    secondIndex = entities.indexOf(naming.stringify(second));
+    }),
+        firstIndex = entities.indexOf(naming.stringify(first)),
+        secondIndex = entities.indexOf(naming.stringify(second));
 
     if (firstIndex === -1 || secondIndex === -1) {
         return false;
@@ -72,14 +71,14 @@ describe('resolve', function () {
 
     it('should include all blocks listed in decl even if they are missing in deps description', function () {
         var decl = [
-                { block: 'A' }
+                { block: 'A' },
+                { block: 'B' }
             ],
-            deps = [];
+            deps = [],
+            resolved = bemDeps.resolve(decl, deps);
 
-        bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }],
-            dependOn: []
-        });
+        (isEntityAdded(resolved, { block: 'A' }) && isEntityAdded(resolved, { block: 'B' })).
+            must.be.true();
     });
 
     it('should not include dependency if it\'s missing in decl and nobody from decl references it', function () {
