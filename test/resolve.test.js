@@ -282,7 +282,7 @@ describe('resolve', function () {
         });
     });
 
-    it('should build deps list for specific tech if it\'s specified', function () {
+    it('should resolve deps list for specific tech for specified deps declaration', function () {
         var decl = [
                 { block: 'A' },
                 { block: 'B' }
