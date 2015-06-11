@@ -19,21 +19,12 @@ describe('resolve', function () {
 
     it('should include all blocks listed in decl even if they are missing in deps description', function () {
         var decl = [
-                { block: 'A' },
-                { block: 'B' },
-                { block: 'C' }
+                { block: 'A' }
             ],
-            deps = [
-                {
-                    entity: { block: 'C' },
-                    dependOn: [
-                        { entity: { block: 'D' } }
-                    ]
-                }
-            ];
+            deps = [];
 
         bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }, { block: 'D' }],
+            entities: [{ block: 'A' }],
             dependOn: []
         });
     });
