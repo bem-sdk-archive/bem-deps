@@ -53,7 +53,10 @@ describe('resolve', function () {
             ],
             deps = [];
 
-        bemDeps.resolve(decl, deps).entities.must.be.eql(decl);
+        bemDeps.resolve(decl, deps).must.be.eql({
+            entities: [{ block: 'A' }],
+            dependOn: []
+        });
     });
 
     it('should not include dependency if it\'s missing in decl and nobody from decl references it', function () {
