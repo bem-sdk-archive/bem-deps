@@ -323,6 +323,27 @@ describe('resolve', function () {
         });
     });
 
+    it('should ignore dependency when tech in entity depends on same tech in another entity if no tech to resolve ' +
+        'specified', function () {
+        var decl = [{ block: 'A' }],
+            deps = [
+                {
+                    entity: { block: 'A' },
+                    tech: 'js',
+                    dependsOn: [
+                        {
+                            entity: { block: 'B' },
+                            tech: 'js'
+                        }
+                    ]
+                }
+            ];
+        bemDeps.resolve(decl, deps).must.be.eql({
+            entities: [{ block: 'A' }],
+            dependsOn: []
+        });
+    });
+
     it('should ignore all dependencies of specific tech of entity depend on another entities if no tech to resolve' +
         ' specified', function () {
         var decl = [
