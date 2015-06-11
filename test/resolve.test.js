@@ -271,6 +271,17 @@ describe('resolve', function () {
             ' B <- C <- B');
     });
 
+    it('should resolve deps for specific tech for unspecified deps declaration', function () {
+        var decl = [
+                { block: 'A' }
+            ],
+            deps = [];
+        bemDeps.resolve(decl, deps, { tech: 'css' }).must.be.eql({
+            entities: [{ block: 'A' }],
+            dependOn: []
+        });
+    });
+
     it('should build deps list for specific tech if it\'s specified', function () {
         var decl = [
                 { block: 'A' },
