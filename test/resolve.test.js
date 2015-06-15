@@ -458,8 +458,7 @@ describe('resolve', function () {
 
     it('should allow tech to depend on several other techs', function () {
         var decl = [
-                { block: 'A' },
-                { block: 'B' }
+                { block: 'A' }
             ],
             deps = [
                 {
@@ -479,7 +478,7 @@ describe('resolve', function () {
             ];
 
         bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }],
+            entities: [{ block: 'A' }],
             dependOn: [
                 {
                     entities: [{ block: 'C' }],
