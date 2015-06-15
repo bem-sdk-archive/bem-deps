@@ -106,26 +106,23 @@ describe('resolve', function () {
     });
 
     it('should place dependence before dependants', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' }
-            ],
+        var blockA = { block: 'A' },
+            blockB = { block: 'B' },
+            decl = [blockA, blockB],
             deps = [
                 {
-                    entity: { block: 'A' },
+                    entity: blockA,
                     dependOn: [
                         {
-                            entity: { block: 'B' },
+                            entity: blockB,
                             order: 'dependenceBeforeDependants'
                         }
                     ]
                 }
-            ];
+            ],
+            resolved = bemDeps.resolve(decl, deps);
 
-        bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'B' }, { block: 'A' }],
-            dependOn: []
-        });
+        expect(resolved.entities.indexOf(blockB)).to.be.before(resolved.entities.indexOf(blockA));
     });
 
     it('should keep the order of declaration', function () {
