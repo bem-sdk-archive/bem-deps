@@ -82,12 +82,11 @@ describe('resolve', function () {
                         { entity: { block: 'C' } }
                     ]
                 }
-            ];
+            ],
+            resolved = bemDeps.resolve(decl, deps);
 
-        bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
-            dependOn: []
-        });
+        expect(resolved).to.include({ block: 'B' });
+        expect(resolved).to.include({ block: 'C' });
     });
 
     it('should ignore entity depend on itself', function () {
