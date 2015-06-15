@@ -5,7 +5,7 @@ var bemDeps = require('../lib/deps'),
 describe('resolve', function () {
     it('should not process empty decl list', function () {
         (function () { bemDeps.resolve(); })
-            .must.throw('The decl list is empty or not defined. It\'s impossible to to resolve empty decl list');
+            .must.throw('The decl list is empty or not defined. It\'s impossible to resolve empty decl list');
     });
 
     it('should return identical decl list if no deps specified', function () {
