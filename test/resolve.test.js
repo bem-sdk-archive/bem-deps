@@ -125,27 +125,24 @@ describe('resolve', function () {
         expect(resolved.entities.indexOf(blockB)).to.be.before(resolved.entities.indexOf(blockA));
     });
 
-    it('should keep the order of declaration', function () {
-        var decl = [
-           { block: 'A' },
-           { block: 'B' },
-           { block: 'C' }
-
-        ],
-        deps = [
-            {
-                entity: { block: 'B' },
-                dependOn: {
-                    entity: { block: 'С' },
-                    order: 'dependenceBeforeDependants'
+    it('should keep the recommended entities order for entities with unspecified ordering', function () {
+        var blockA = { block: 'A' },
+            blockB = { block: 'B' },
+            blockC = { block: 'C' },
+            decl = [blockA, blockB, blockC],
+            deps = [
+                {
+                    entity: blockB,
+                    dependOn: {
+                        entity: blockC,
+                        order: 'dependenceBeforeDependants'
+                    }
                 }
-            }
-        ];
+            ],
+            resolved = bemDeps.resolve(decl, deps);
 
-        bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'С' }, { block: 'B' }],
-            dependOn: []
-        });
+        expect(resolved.entities.indexOf(blockA)).to.be.before(resolved.entities.indexOf(blockC));
+        expect(resolved.entities.indexOf(blockC)).to.be.before(resolved.entities.indexOf(blockB));
     });
 
     it('should throw error if detected direct cyclic dependencies', function () {
