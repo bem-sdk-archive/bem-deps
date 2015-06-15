@@ -1,24 +1,5 @@
 var bemDeps = require('../lib/deps'),
-    naming =  require('bem-naming'),
     expect =  require('must');
-
-function isEntityBeforeEntity(resolved, first, second) {
-    if (!Array.isArray(resolved.entities)) {
-        return false;
-    }
-
-    var entities = resolved.entities.map(function (entity) {
-        return naming.stringify(entity);
-    }),
-        firstIndex = entities.indexOf(naming.stringify(first)),
-        secondIndex = entities.indexOf(naming.stringify(second));
-
-    if (firstIndex === -1 || secondIndex === -1) {
-        return false;
-    }
-
-    return entities.indexOf(first) < entities.indexOf(second);
-}
 
 describe('resolve', function () {
     it('should not process empty decl list', function () {
@@ -63,30 +44,30 @@ describe('resolve', function () {
     });
 
     it('should keep the recommended entities ordering described in decl', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' },
-                { block: 'C' }
-            ],
+        var blockA = { block: 'A' },
+            blockB = { block: 'B' },
+            decl = [blockA, blockB],
             deps = [],
             resolved = bemDeps.resolve(decl, deps);
 
-        (isEntityBeforeEntity(resolved, { block: 'A' }, { block: 'B' }) &&
-            isEntityBeforeEntity(resolved, { block: 'B' }, { block: 'C' })).must.be.true();
+        expect(resolved.entities.indexOf(blockA)).to.be.before(resolved.entities.indexOf(blockB));
     });
 
     it('should keep the recommended dependencies ordering described in deps', function () {
-        var decl = [{ block: 'A' }],
+        var blockA = { block: 'A' },
+            blockB = { block: 'B' },
+            decl = [blockA],
             deps = [
                 {
-                    entity: { block: 'A' },
+                    entity: blockA,
                     dependOn: [
-                        { entity: { block: 'B' } }
+                        { entity: blockB }
                     ]
                 }
-            ];
+            ],
+            resolved = bemDeps.resolve(decl, deps);
 
-        isEntityBeforeEntity(bemDeps.resolve(decl, deps), { block: 'A' }, { block: 'B' }).must.be.true();
+        expect(resolved.entities.indexOf(blockA)).to.be.before(resolved.entities.indexOf(blockB));
     });
 
     it('should allow entity to depend on multiple entities', function () {
