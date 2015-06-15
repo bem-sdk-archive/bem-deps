@@ -102,10 +102,7 @@ describe('resolve', function () {
                 }
             ];
 
-        bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }],
-            dependOn: []
-        });
+        expect(bemDeps.resolve(decl, deps).entities).to.be.eql([{ block: 'A' }]);
     });
 
     it('should place dependence before dependants', function () {
