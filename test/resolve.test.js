@@ -1,5 +1,6 @@
 var bemDeps = require('../lib/deps'),
-    expect =  require('must');
+    expect =  require('must'),
+    _ = require('lodash');
 
 describe('resolve', function () {
     it('should not process empty decl list', function () {
@@ -44,30 +45,31 @@ describe('resolve', function () {
     });
 
     it('should keep the recommended entities ordering described in decl', function () {
-        var blockA = { block: 'A' },
-            blockB = { block: 'B' },
-            decl = [blockA, blockB],
+            var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
             deps = [],
             resolved = bemDeps.resolve(decl, deps);
 
-        expect(resolved.entities.indexOf(blockA)).to.be.before(resolved.entities.indexOf(blockB));
+        expect(_.findIndex(resolved.entities, { block: 'A' }))
+            .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
     });
 
     it('should keep the recommended dependencies ordering described in deps', function () {
-        var blockA = { block: 'A' },
-            blockB = { block: 'B' },
-            decl = [blockA],
+        var decl = [{ block: 'A' }],
             deps = [
                 {
-                    entity: blockA,
+                    entity: { block: 'A' },
                     dependOn: [
-                        { entity: blockB }
+                        { entity: { block: 'B' } }
                     ]
                 }
             ],
             resolved = bemDeps.resolve(decl, deps);
 
-        expect(resolved.entities.indexOf(blockA)).to.be.before(resolved.entities.indexOf(blockB));
+        expect(_.findIndex(resolved.entities, { block: 'A' }))
+            .to.be.before(_.findIndex(resolved.entities), { block: 'B' });
     });
 
     it('should allow entity to depend on multiple entities', function () {
@@ -106,15 +108,16 @@ describe('resolve', function () {
     });
 
     it('should place dependence before dependants', function () {
-        var blockA = { block: 'A' },
-            blockB = { block: 'B' },
-            decl = [blockA, blockB],
+        var decl = [
+                { block: 'A' },
+                { block: 'B' }
+            ],
             deps = [
                 {
-                    entity: blockA,
+                    entity: { block: 'A' },
                     dependOn: [
                         {
-                            entity: blockB,
+                            entity: { block: 'B' },
                             order: 'dependenceBeforeDependants'
                         }
                     ]
@@ -122,27 +125,31 @@ describe('resolve', function () {
             ],
             resolved = bemDeps.resolve(decl, deps);
 
-        expect(resolved.entities.indexOf(blockB)).to.be.before(resolved.entities.indexOf(blockA));
+        expect(_.findIndex(resolved.entities, { block: 'B' }))
+            .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
     });
 
     it('should keep the recommended entities order for entities with unspecified ordering', function () {
-        var blockA = { block: 'A' },
-            blockB = { block: 'B' },
-            blockC = { block: 'C' },
-            decl = [blockA, blockB, blockC],
+        var decl = [
+                { block: 'A' },
+                { block: 'B' },
+                { block: 'C' }
+            ],
             deps = [
                 {
-                    entity: blockB,
+                    entity: { block: 'B' },
                     dependOn: {
-                        entity: blockC,
+                        entity: { block: 'C' },
                         order: 'dependenceBeforeDependants'
                     }
                 }
             ],
             resolved = bemDeps.resolve(decl, deps);
 
-        expect(resolved.entities.indexOf(blockA)).to.be.before(resolved.entities.indexOf(blockC));
-        expect(resolved.entities.indexOf(blockC)).to.be.before(resolved.entities.indexOf(blockB));
+        expect(_.findIndex(resolved.entities, { block: 'A' }))
+            .to.be.before(_.findIndex(resolved.entities, { block: 'C' }));
+        expect(_.findIndex(resolved.entities, { block: 'C' }))
+            .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
     });
 
     it('should throw error if detected direct cyclic dependencies', function () {
