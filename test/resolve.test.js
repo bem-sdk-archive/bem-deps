@@ -266,22 +266,20 @@ describe('resolve', function () {
 
     it('should resolve deps list for specific tech for specified deps declaration', function () {
         var decl = [
-                { block: 'A' },
-                { block: 'B' }
+                { block: 'A' }
             ],
             deps = [
                 {
                     entity: { block: 'A' },
                     dependOn: [
-                        { entity: { block: 'C' } }
+                        { entity: { block: 'B' } }
                     ]
                 }
-            ];
+            ],
+            resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
 
-        bemDeps.resolve(decl, deps, { tech: 'css' }).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
-            dependOn: []
-        });
+        expect(resolved.entities).to.include({ block: 'A' });
+        expect(resolved.entities).to.include({ block: 'B' });
     });
 
     it('should allow tech in entity to depend on another entity', function () {
