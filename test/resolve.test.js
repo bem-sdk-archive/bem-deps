@@ -381,8 +381,7 @@ describe('resolve', function () {
 
     it('should allow tech in one entity to depend on another tech in another entity', function () {
         var decl = [
-                { block: 'A' },
-                { block: 'B' }
+                { block: 'A' }
             ],
             deps = [
                 {
@@ -390,46 +389,39 @@ describe('resolve', function () {
                     tech: 'js',
                     dependOn: [
                         {
-                            entity: { block: 'C' },
+                            entity: { block: 'B' },
                             tech: 'css'
                         }
                     ]
                 }
-            ];
+            ],
+            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-        bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }],
-            dependOn: [
-                {
-                    entities: [{ block: 'C' }],
-                    tech: 'css'
-                }
-            ]
-        });
+        expect(resolved.dependOn).have.length(1);
+        expect(resolved.dependOn[0]).to.include('css');
+        expect(resolved.dependOn[0].entities).to.include({ block: 'B' });
     });
 
     it('should add tech dependency to entities list if this tech matching tech for which dependencies ' +
         'are being resolved now', function () {
         var decl = [
-                { block: 'A' },
-                { block: 'B' }
+                { block: 'A' }
             ],
             deps = [
                 {
                     entity: { block: 'A' },
                     dependOn: [
                         {
-                            entity: { block: 'C' },
+                            entity: { block: 'B' },
                             tech: 'js'
                         }
                     ]
                 }
-            ];
+            ],
+            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-        bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }, { block: 'C' }],
-            dependOn: []
-        });
+        expect(resolved.entities).to.include({ block: 'A' });
+        expect(resolved.entities).to.include({ block: 'B' });
     });
 
     it('should keep order for tech dependencies same with resolving tech', function () {
