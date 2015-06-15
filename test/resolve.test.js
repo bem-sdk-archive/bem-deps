@@ -1,41 +1,6 @@
 var bemDeps = require('../lib/deps'),
-    naming = require('bem-naming');
-
-function isAddedToEntities (resolved, entity) {
-    if (!Array.isArray(resolved.entities)) {
-        return false;
-    }
-
-    entity = naming.stringify(entity);
-
-    return resolved.entities.map(function (added) {
-        return naming.stringify(added);
-    }).some(function (stringified) {
-        return stringified === entity;
-    });
-}
-
-function isAddedToDependOn (resolved, entity) {
-    if (!Array.isArray(resolved.dependOn)) {
-        return false;
-    }
-
-    var allDependencies = [];
-
-    entity = naming.stringify(entity);
-
-    resolved.dependOn.map(function (dependencyByTech) {
-        allDependencies.concat(dependencyByTech.entities);
-    });
-
-    return allDependencies.some(function (dependency) {
-        return dependency === entity;
-    });
-}
-
-function isEntityAdded (resolved, entity) {
-    return isAddedToEntities(resolved, entity) || isAddedToDependOn(resolved, entity);
-}
+    naming =  require('bem-naming'),
+    expect =  require('must');
 
 function isEntityBeforeEntity(resolved, first, second) {
     if (!Array.isArray(resolved.entities)) {
@@ -77,8 +42,8 @@ describe('resolve', function () {
             deps = [],
             resolved = bemDeps.resolve(decl, deps);
 
-        (isEntityAdded(resolved, { block: 'A' }) && isEntityAdded(resolved, { block: 'B' })).
-            must.be.true();
+        expect(resolved.entities).to.include({ block: 'A' });
+        expect(resolved.entities).to.include({ block: 'B' });
     });
 
     it('should not include dependency if it\'s missing in decl and nobody from decl references it', function () {
@@ -92,11 +57,9 @@ describe('resolve', function () {
                         { entity: { block: 'A' } }
                     ]
                 }
-            ],
-            resolved = null;
+            ];
 
-        resolved = bemDeps.resolve(decl, deps);
-        isEntityAdded(resolved, { block: 'B' }).must.be.false();
+        expect(bemDeps.resolve(decl, deps)).not.to.include({ block: 'B' });
     });
 
     it('should keep the recommended entities ordering described in decl', function () {
@@ -106,11 +69,10 @@ describe('resolve', function () {
                 { block: 'C' }
             ],
             deps = [],
-            resolved = null;
+            resolved = bemDeps.resolve(decl, deps);
 
-        resolved = bemDeps.resolve(decl, deps);
-        isEntityBeforeEntity(resolved, { block: 'A' }, { block: 'B' }) &&
-            isEntityBeforeEntity(resolved, { block: 'B' }, { block: 'C' }).must.be.true();
+        (isEntityBeforeEntity(resolved, { block: 'A' }, { block: 'B' }) &&
+            isEntityBeforeEntity(resolved, { block: 'B' }, { block: 'C' })).must.be.true();
     });
 
     it('should keep the recommended dependencies ordering described in deps', function () {
@@ -123,10 +85,8 @@ describe('resolve', function () {
                     ]
                 }
             ];
-        bemDeps.resolve(decl, deps).must.be.eql({
-            entities: [{ block: 'A' }, { block: 'B' }],
-            dependOn: []
-        });
+
+        isEntityBeforeEntity(bemDeps.resolve(decl, deps), { block: 'A' }, { block: 'B' }).must.be.true();
     });
 
     it('should allow entity to depend on multiple entities', function () {
@@ -594,12 +554,10 @@ describe('resolve', function () {
                         }
                     ]
                 }
-            ];
+            ],
+            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-        bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
-            entities: [{ block: 'A' }],
-            dependOn: []
-        });
+        expect(resolved.dependOn).to.be.empty();
     });
 
     it('should ignore tech dependencies not matching with tech being resolved when ordering set', function () {
@@ -619,10 +577,8 @@ describe('resolve', function () {
                     ]
                 }
             ],
-            resolved = null;
+            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-        resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
-
-        isAddedToDependOn(resolved, { block: 'C' }).must.be.false();
+        expect(resolved.dependOn).to.be.empty();
     });
 });
