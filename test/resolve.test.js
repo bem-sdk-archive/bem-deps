@@ -447,12 +447,13 @@ describe('resolve', function () {
                         }
                     ]
                 }
-            ];
+            ],
+            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-        bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
-            entities: [{ block: 'C' }, { block: 'A' }, { block: 'B' }],
-            dependOn: []
-        });
+        expect(_.findIndex(resolved.entities, { block: 'C' }))
+            .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
+        expect(_.findIndex(resolved.entities, { block: 'A' }))
+            .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
     });
 
     it('should allow tech to depend on several other techs', function () {
