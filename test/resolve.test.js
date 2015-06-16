@@ -63,32 +63,79 @@ describe('resolve', function () {
         });
     });
 
-    it('should keep the recommended entities ordering described in decl', function () {
+    describe('recommended and explicit ordering', function () {
+        it('should keep the recommended entities ordering described in decl', function () {
             var decl = [
-                { block: 'A' },
-                { block: 'B' }
-            ],
-            deps = [],
-            resolved = bemDeps.resolve(decl, deps);
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [],
+                resolved = bemDeps.resolve(decl, deps);
 
-        expect(_.findIndex(resolved.entities, { block: 'A' }))
-            .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
-    });
+            expect(_.findIndex(resolved.entities, { block: 'A' }))
+                .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
+        });
 
-    it('should keep the recommended dependencies ordering described in deps', function () {
-        var decl = [{ block: 'A' }],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    dependOn: [
-                        { entity: { block: 'B' } }
-                    ]
-                }
-            ],
-            resolved = bemDeps.resolve(decl, deps);
+        it('should keep the recommended dependencies ordering described in deps', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            { entity: { block: 'B' } }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps);
 
-        expect(_.findIndex(resolved.entities, { block: 'A' }))
-            .to.be.before(_.findIndex(resolved.entities), { block: 'B' });
+            expect(_.findIndex(resolved.entities, { block: 'A' }))
+                .to.be.before(_.findIndex(resolved.entities), { block: 'B' });
+        });
+
+        it('should place dependence before dependants if explicitly described in deps graph', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps);
+
+            expect(_.findIndex(resolved.entities, { block: 'B' }))
+                .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
+        });
+
+        it('should keep the recommended entities order for entities with unspecified ordering', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' },
+                    { block: 'C' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'B' },
+                        dependOn: {
+                            entity: { block: 'C' },
+                            order: 'dependenceBeforeDependants'
+                        }
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps);
+
+            expect(_.findIndex(resolved.entities, { block: 'A' }))
+                .to.be.before(_.findIndex(resolved.entities, { block: 'C' }));
+            expect(_.findIndex(resolved.entities, { block: 'C' }))
+                .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
+        });
     });
 
     it('should allow entity to depend on multiple entities', function () {
@@ -124,51 +171,6 @@ describe('resolve', function () {
             ];
 
         expect(bemDeps.resolve(decl, deps).entities).to.be.eql([{ block: 'A' }]);
-    });
-
-    it('should place dependence before dependants', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    dependOn: [
-                        {
-                            entity: { block: 'B' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                }
-            ],
-            resolved = bemDeps.resolve(decl, deps);
-
-        expect(_.findIndex(resolved.entities, { block: 'B' }))
-            .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
-    });
-
-    it('should keep the recommended entities order for entities with unspecified ordering', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' },
-                { block: 'C' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'B' },
-                    dependOn: {
-                        entity: { block: 'C' },
-                        order: 'dependenceBeforeDependants'
-                    }
-                }
-            ],
-            resolved = bemDeps.resolve(decl, deps);
-
-        expect(_.findIndex(resolved.entities, { block: 'A' }))
-            .to.be.before(_.findIndex(resolved.entities, { block: 'C' }));
-        expect(_.findIndex(resolved.entities, { block: 'C' }))
-            .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
     });
 
     it('should throw error if detected direct cyclic dependencies', function () {
