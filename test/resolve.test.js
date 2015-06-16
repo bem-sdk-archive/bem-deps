@@ -3,17 +3,24 @@ var bemDeps = require('../lib/deps'),
     _ = require('lodash');
 
 describe('resolve', function () {
-    it('should not process empty decl list', function () {
-        (function () { bemDeps.resolve(); })
-            .must.throw('The decl list is empty or not defined. It\'s impossible to resolve empty decl list');
-    });
+    describe('input processing', function () {
+        it('should throw error if decl param is not defined', function () {
+            (function () { bemDeps.resolve(); })
+                .must.throw('The decl list is not defined. It\'s impossible to resolve missing decl list');
+        });
 
-    it('should return identical decl list if no deps specified', function () {
-        var decl = [
-            { block: 'A' }
-        ];
+        it('should throw error if decl param is empty', function () {
+            (function () { bemDeps.resolve([]); })
+                .must.throw('The decl list is empty. It\'s impossible to resolve empty decl list');
+        });
 
-        bemDeps.resolve(decl).entities.must.be.eql(decl);
+        it('should return identical decl list if no deps specified', function () {
+            var decl = [
+                { block: 'A' }
+            ];
+
+            bemDeps.resolve(decl).entities.must.be.eql(decl);
+        });
     });
 
     it('should include all blocks listed in decl even if they are missing in deps description', function () {
