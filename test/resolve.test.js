@@ -23,32 +23,44 @@ describe('resolve', function () {
         });
     });
 
-    it('should include all blocks listed in decl even if they are missing in deps description', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' }
-            ],
-            deps = [],
-            resolved = bemDeps.resolve(decl, deps);
+    describe('resolving entities missing in deps graph', function () {
+        it('should include all blocks listed in decl for undefined deps graph', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                resolved = bemDeps.resolve(decl);
 
-        expect(resolved.entities).to.include({ block: 'A' });
-        expect(resolved.entities).to.include({ block: 'B' });
-    });
+            expect(resolved.entities).to.include({ block: 'A' });
+            expect(resolved.entities).to.include({ block: 'B' });
+        });
 
-    it('should not include dependency if it\'s missing in decl and nobody from decl references it', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'B' },
-                    dependOn: [
-                        { entity: { block: 'A' } }
-                    ]
-                }
-            ];
+        it('should include all blocks listed in decl for empty deps graph', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [],
+                resolved = bemDeps.resolve(decl, deps);
 
-        expect(bemDeps.resolve(decl, deps)).not.to.include({ block: 'B' });
+            expect(resolved.entities).to.include({ block: 'A' });
+            expect(resolved.entities).to.include({ block: 'B' });
+        });
+        it('should not include dependency if it\'s missing in decl and nobody from decl references it', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            { entity: { block: 'A' } }
+                        ]
+                    }
+                ];
+
+            expect(bemDeps.resolve(decl, deps)).not.to.include({ block: 'B' });
+        });
     });
 
     it('should keep the recommended entities ordering described in decl', function () {
