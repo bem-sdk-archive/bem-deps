@@ -734,46 +734,48 @@ describe('resolve', function () {
         });
     });
 
-    it('should ignore tech dependencies not matching with tech being resolved', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    tech: 'css',
-                    dependOn: [
-                        {
-                            entity: { block: 'C' },
-                            tech: 'js'
-                        }
-                    ]
-                }
-            ],
-            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+    describe('ignoring tech dependencies not matching with tech being resolved', function () {
+        it('should ignore tech dependencies not matching with tech being resolved', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        tech: 'css',
+                        dependOn: [
+                            {
+                                entity: { block: 'C' },
+                                tech: 'js'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-        expect(resolved.dependOn).to.be.empty();
-    });
+            expect(resolved.dependOn).to.be.empty();
+        });
 
-    it('should ignore tech dependencies not matching with tech being resolved when ordering set', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    tech: 'css',
-                    dependOn: [
-                        {
-                            entity: { block: 'C' },
-                            tech: 'js',
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                }
-            ],
-            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+        it('should ignore tech dependencies not matching with tech being resolved when ordering set', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        tech: 'css',
+                        dependOn: [
+                            {
+                                entity: { block: 'C' },
+                                tech: 'js',
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-        expect(resolved.dependOn).to.be.empty();
+            expect(resolved.dependOn).to.be.empty();
+        });
     });
 });
