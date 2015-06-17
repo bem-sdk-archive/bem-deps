@@ -697,7 +697,7 @@ describe('resolve', function () {
             expect(resolved.dependOn[0].entities).to.include({ block: 'B' });
         });
 
-        it('should allow tech in entity to depend on several other techs', function () {
+        it('should allow tech in entity to depend on several other techs of different entities', function () {
             var decl = [
                     { block: 'A' }
                 ],
@@ -718,19 +718,48 @@ describe('resolve', function () {
                     }
                 ];
 
-            bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
-                entities: [{ block: 'A' }],
-                dependOn: [
+            expect(bemDeps.resolve(decl, deps, { tech: 'js' }).dependOn).to.be.eql([
+                {
+                    entities: [{ block: 'C' }],
+                    tech: 'css'
+                },
+                {
+                    entities: [{ block: 'D' }],
+                    tech: 'bh'
+                }
+            ]);
+        });
+
+        it('should allow tech in entity to depend on several other techs of entity', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
                     {
-                        entities: [{ block: 'C' }],
-                        tech: 'css'
-                    },
-                    {
-                        entities: [{ block: 'D' }],
-                        tech: 'bh'
+                        entity: { block: 'A' },
+                        tech: 'js',
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                tech: 'css'
+                            },
+                            {
+                                entity: { block: 'B' },
+                                tech: 'bh'
+                            }
+                        ]
                     }
-                ]
-            });
+                ];
+            expect(bemDeps.resolve(decl, deps, { tech: 'js' }).dependOn).to.be.eql([
+                {
+                    entities: [{ block: 'B' }],
+                        tech: 'css'
+                },
+                {
+                    entities: [{ block: 'B' }],
+                        tech: 'bh'
+                }
+            ]);
         });
     });
 
