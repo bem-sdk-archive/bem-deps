@@ -547,8 +547,51 @@ describe('resolve', function () {
         });
     });
 
-    describe('tech dependencies ordering', function () {
-        it('should keep order for tech dependencies same with resolving tech', function () {
+    describe('tech dependencies recommended and explicit ordering', function () {
+        it('should keep recommended order for entities same with resolving tech', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                tech: 'js'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+
+            expect(_.findIndex(resolved.entities, { block: 'A' }))
+                .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
+        });
+
+        it('should place dependence before dependants in entities list for dependency with same tech with tech ' +
+            'being resolved', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                tech: 'js',
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+
+            expect(_.findIndex(resolved.entities, { block: 'B' }))
+                .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
+        });
+
+        it('should keep recommended ordering in entities list for tech dependencies with save tech with tech ' +
+            'being resolved', function () {
             var decl = [
                     { block: 'A' },
                     { block: 'B' }
