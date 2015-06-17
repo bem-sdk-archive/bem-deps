@@ -188,114 +188,116 @@ describe('resolve', function () {
         });
     });
 
-    it('should throw error if detected direct cyclic dependencies', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    dependOn: [
-                        {
-                            entity: { block: 'B' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                },
-                {
-                    entity: { block: 'B' },
-                    dependOn: [
-                        {
-                            entity: { block: 'A' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                }
-            ];
+    describe('resolving dependency cycles', function () {
+        it('should throw error if detected direct cyclic dependencies', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            {
+                                entity: { block: 'A' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    }
+                ];
 
-        (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
-            ' reference A <- B <- A');
-    });
+            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+                ' reference A <- B <- A');
+        });
 
-    it('should throw error if detected indirect cyclic dependencies', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' },
-                { block: 'C' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    dependOn: [
-                        {
-                            entity: { block: 'B' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                },
-                {
-                    entity: { block: 'B' },
-                    dependOn: [
-                        {
-                            entity: { block: 'С' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                },
-                {
-                    entity: { block: 'C' },
-                    dependOn: [
-                        {
-                            entity: { block: 'A' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                }
-            ];
+        it('should throw error if detected indirect cyclic dependencies', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' },
+                    { block: 'C' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            {
+                                entity: { block: 'С' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'C' },
+                        dependOn: [
+                            {
+                                entity: { block: 'A' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    }
+                ];
 
-        (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
-            ' A <- B <- C <- A');
-    });
+            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
+                ' A <- B <- C <- A');
+        });
 
-    it('should throw error if detected intermediate cyclic dependencies', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' },
-                { block: 'C' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    dependOn: [
-                        {
-                            entity: { block: 'B' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                },
-                {
-                    entity: { block: 'B' },
-                    dependOn: [
-                        {
-                            entity: { block: 'C' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                },
-                {
-                    entity: { block: 'C' },
-                    dependOn: [
-                        {
-                            entity: { block: 'B' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                }
-            ];
+        it('should throw error if detected intermediate cyclic dependencies', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' },
+                    { block: 'C' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            {
+                                entity: { block: 'C' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'C' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    }
+                ];
 
-        (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
-            ' B <- C <- B');
+            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
+                ' B <- C <- B');
+        });
     });
 
     it('should resolve deps for specific tech for unspecified deps declaration', function () {
