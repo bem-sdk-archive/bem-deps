@@ -391,6 +391,86 @@ describe('resolve', function () {
         });
     });
 
+    describe('ignoring tech dependencies when no tech to resolve specified', function () {
+        it('should ignore dependency when tech in entity depends on same tech in another entity if no tech to ' +
+            'resolve specified', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        tech: 'js',
+                        dependsOn: [
+                            {
+                                entity: { block: 'B' },
+                                tech: 'js'
+                            }
+                        ]
+                    }
+                ];
+
+            expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
+        });
+
+        it('should ignore dependency when tech in entity depends on another tech in another entity if no tech to ' +
+            'resolve specified', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        tech: 'js',
+                        dependsOn: [
+                            {
+                                entity: { block: 'B' },
+                                tech: 'css'
+                            }
+                        ]
+                    }
+                ];
+
+            expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
+        });
+
+        it('should ignore dependency when tech of entity depend on another entities if no tech to resolve' +
+            ' specified', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        tech: 'js',
+                        dependOn: [
+                            { entity: { block: 'C' } }
+                        ]
+                    }
+                ];
+
+            expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
+        });
+
+        it('should ignore dependency when tech of entity depend on another entities if no tech to resolve ' +
+            'specified and ordering set', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        tech: 'js',
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    }
+                ];
+
+            expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
+        });
+    });
+
     describe('resolving \'tech <- entity\' dependencies for specific tech', function () {
         it('should allow tech in entity to depend on another entity', function () {
             var decl = [
@@ -445,84 +525,6 @@ describe('resolve', function () {
 
             expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
-    });
-
-    it('should ignore dependency when tech in entity depends on same tech in another entity if no tech to resolve ' +
-        'specified', function () {
-        var decl = [{ block: 'A' }],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    tech: 'js',
-                    dependsOn: [
-                        {
-                            entity: { block: 'B' },
-                            tech: 'js'
-                        }
-                    ]
-                }
-            ];
-
-        expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
-    });
-
-    it('should ignore dependency when tech in entity depends on another tech in another entity if no tech to resolve ' +
-        'specified', function () {
-        var decl = [{ block: 'A' }],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    tech: 'js',
-                    dependsOn: [
-                        {
-                            entity: { block: 'B' },
-                            tech: 'css'
-                        }
-                    ]
-                }
-            ];
-
-        expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
-    });
-
-    it('should ignore dependency when tech of entity depend on another entities if no tech to resolve' +
-        ' specified', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    tech: 'js',
-                    dependOn: [
-                        { entity: { block: 'C' } }
-                    ]
-                }
-            ];
-
-        expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
-    });
-
-    it('should ignore dependency when tech of entity depend on another entities if no tech to resolve ' +
-        'specified and ordering set', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    tech: 'js',
-                    dependOn: [
-                        {
-                            entity: { block: 'B' },
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                }
-            ];
-
-        expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
     });
 
     it('should allow tech in one entity to depend on another tech in another entity', function () {
