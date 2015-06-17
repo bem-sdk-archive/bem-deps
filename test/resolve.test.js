@@ -19,7 +19,14 @@ describe('resolve', function () {
                 { block: 'A' }
             ];
 
-            bemDeps.resolve(decl).entities.must.be.eql(decl);
+            expect(bemDeps.resolve(decl).entities).to.be.eql(decl);
+        });
+
+        it('should return identical decl list if deps graph is not an array', function () {
+            var decl = [{ block: 'A' }],
+                deps = {};
+
+            expect(bemDeps.resolve(decl, deps).entities).to.be.eql(decl);
         });
     });
 
@@ -255,8 +262,8 @@ describe('resolve', function () {
                     }
                 ];
 
-            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
-                ' A <- B <- C <- A');
+            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+                ' reference A <- B <- C <- A');
         });
 
         it('should throw error if detected intermediate cyclic dependencies', function () {
@@ -295,8 +302,8 @@ describe('resolve', function () {
                     }
                 ];
 
-            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic reference' +
-                ' B <- C <- B');
+            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+                ' reference B <- C <- B');
         });
     });
 
