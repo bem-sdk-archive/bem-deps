@@ -23,6 +23,56 @@ describe('resolve', function () {
         });
     });
 
+    describe('resolving basic dependencies', function () {
+        it('should allow entity to depend on another entity', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [{ entity: { block: 'B' } }]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps);
+
+            expect(resolved.entities).to.include({ block: 'B' });
+        });
+
+        it('should allow entity to depend on multiple entities', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            { entity: { block: 'B' } },
+                            { entity: { block: 'C' } }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps);
+
+            expect(resolved).to.include({ block: 'B' });
+            expect(resolved).to.include({ block: 'C' });
+        });
+
+        it('should ignore entity depend on itself', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            { entity: { block: 'A' } }
+                        ]
+                    }
+                ];
+
+            expect(bemDeps.resolve(decl, deps).entities).to.be.eql([{ block: 'A' }]);
+        });
+    });
+
     describe('resolving entities missing in deps graph', function () {
         it('should include all blocks listed in decl for undefined deps graph', function () {
             var decl = [
@@ -136,41 +186,6 @@ describe('resolve', function () {
             expect(_.findIndex(resolved.entities, { block: 'C' }))
                 .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
         });
-    });
-
-    it('should allow entity to depend on multiple entities', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    dependOn: [
-                        { entity: { block: 'B' } },
-                        { entity: { block: 'C' } }
-                    ]
-                }
-            ],
-            resolved = bemDeps.resolve(decl, deps);
-
-        expect(resolved).to.include({ block: 'B' });
-        expect(resolved).to.include({ block: 'C' });
-    });
-
-    it('should ignore entity depend on itself', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    dependOn: [
-                        { entity: { block: 'A' } }
-                    ]
-                }
-            ];
-
-        expect(bemDeps.resolve(decl, deps).entities).to.be.eql([{ block: 'A' }]);
     });
 
     it('should throw error if detected direct cyclic dependencies', function () {
