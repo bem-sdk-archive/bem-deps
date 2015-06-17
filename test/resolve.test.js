@@ -28,6 +28,39 @@ describe('resolve', function () {
 
             expect(bemDeps.resolve(decl, deps).entities).to.be.eql(decl);
         });
+
+        it('should return identical decl list for specific tech for unspecified deps declaration', function () {
+            var decl = [
+                    { block: 'A' }
+                ];
+
+            expect(bemDeps.resolve(decl, undefined, { tech: 'css' }).entities).to.be.eql([{ block: 'A' }]);
+        });
+
+        it('should return identical decl list for specific tech for empty deps declaration', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [];
+
+            expect(bemDeps.resolve(decl, deps, { tech: 'css' }).entities).to.be.eql([{ block: 'A' }]);
+        });
+
+        it('should ignore tech param if it\'s format differs from { tech: \'%tech_name%\' }', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        tech: 'css',
+                        dependOn: [{ entity: { block: 'B' } }]
+                    }
+                ],
+                tech = 'css';
+
+            expect(bemDeps.resolve(decl, deps, tech).entities).not.to.include({ block: 'B' });
+        });
     });
 
     describe('resolving basic dependencies', function () {
@@ -305,15 +338,6 @@ describe('resolve', function () {
             (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
                 ' reference B <- C <- B');
         });
-    });
-
-    it('should resolve deps for specific tech for unspecified deps declaration', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [];
-
-        expect(bemDeps.resolve(decl, deps, { tech: 'css' }).entities).to.be.eql([{ block: 'A' }]);
     });
 
     it('should resolve deps list for specific tech for specified deps declaration', function () {
