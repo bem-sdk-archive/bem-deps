@@ -471,6 +471,109 @@ describe('resolve', function () {
         });
     });
 
+    describe('tech dependencies grouping', function () {
+        it('should add tech dependency to entities list if this tech matching tech for which dependencies ' +
+            'are being resolved', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                tech: 'js'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+
+            expect(resolved.entities).to.include({ block: 'B' });
+        });
+
+        it('should add tech dependency to dependOn section if this tech is not matching tech for which dependencies ' +
+            'are being resolved', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                tech: 'js'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+
+            expect(resolved.dependOn).have.length(1);
+            expect(resolved.dependOn[0]).to.be.eql({
+                tech: 'js',
+                entities: [{ block: 'B' }]
+            });
+        });
+
+        it('should add multiple tech dependencies of same tech to dependOn section to list of entities related to ' +
+            'this tech if this tech is not matching tech for which dependencies are being resolved', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                tech: 'js'
+                            },
+                            {
+                                entity: { block: 'C' },
+                                tech: 'js'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+
+            expect(resolved.dependOn).have.length(1);
+            expect(resolved.dependOn[0]).to.include('js');
+            expect(resolved.dependOn[0].entities).to.include({ block: 'B' });
+            expect(resolved.dependOn[0].entities).to.include({ block: 'C' });
+        });
+    });
+
+    describe('tech dependencies ordering', function () {
+        it('should keep order for tech dependencies same with resolving tech', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'C' },
+                                tech: 'js',
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+
+            expect(_.findIndex(resolved.entities, { block: 'C' }))
+                .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
+            expect(_.findIndex(resolved.entities, { block: 'A' }))
+                .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
+        });
+    });
+
     describe('resolving \'tech <- entity\' dependencies for specific tech', function () {
         it('should allow tech in entity to depend on another entity', function () {
             var decl = [
@@ -527,109 +630,64 @@ describe('resolve', function () {
         });
     });
 
-    it('should allow tech in one entity to depend on another tech in another entity', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    tech: 'js',
-                    dependOn: [
-                        {
-                            entity: { block: 'B' },
-                            tech: 'css'
-                        }
-                    ]
-                }
-            ],
-            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+    describe('resolving \'tech <- tech\' dependencies for specific tech', function () {
+        it('should allow tech in one entity to depend on another tech in another entity', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        tech: 'js',
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                tech: 'css'
+                            }
+                        ]
+                    }
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-        expect(resolved.dependOn).have.length(1);
-        expect(resolved.dependOn[0]).to.include('css');
-        expect(resolved.dependOn[0].entities).to.include({ block: 'B' });
-    });
+            expect(resolved.dependOn).have.length(1);
+            expect(resolved.dependOn[0]).to.include('css');
+            expect(resolved.dependOn[0].entities).to.include({ block: 'B' });
+        });
 
-    it('should add tech dependency to entities list if this tech matching tech for which dependencies ' +
-        'are being resolved now', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    dependOn: [
-                        {
-                            entity: { block: 'B' },
-                            tech: 'js'
-                        }
-                    ]
-                }
-            ],
-            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+        it('should allow tech in entity to depend on several other techs', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        tech: 'js',
+                        dependOn: [
+                            {
+                                entity: { block: 'C' },
+                                tech: 'css'
+                            },
+                            {
+                                entity: { block: 'D' },
+                                tech: 'bh'
+                            }
+                        ]
+                    }
+                ];
 
-        expect(resolved.entities).to.include({ block: 'A' });
-        expect(resolved.entities).to.include({ block: 'B' });
-    });
-
-    it('should keep order for tech dependencies same with resolving tech', function () {
-        var decl = [
-                { block: 'A' },
-                { block: 'B' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    dependOn: [
-                        {
-                            entity: { block: 'C' },
-                            tech: 'js',
-                            order: 'dependenceBeforeDependants'
-                        }
-                    ]
-                }
-            ],
-            resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
-
-        expect(_.findIndex(resolved.entities, { block: 'C' }))
-            .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
-        expect(_.findIndex(resolved.entities, { block: 'A' }))
-            .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
-    });
-
-    it('should allow tech to depend on several other techs', function () {
-        var decl = [
-                { block: 'A' }
-            ],
-            deps = [
-                {
-                    entity: { block: 'A' },
-                    tech: 'js',
-                    dependOn: [
-                        {
-                            entity: { block: 'C' },
-                            tech: 'css'
-                        },
-                        {
-                            entity: { block: 'D' },
-                            tech: 'bh'
-                        }
-                    ]
-                }
-            ];
-
-        bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
-            entities: [{ block: 'A' }],
-            dependOn: [
-                {
-                    entities: [{ block: 'C' }],
-                    tech: 'css'
-                },
-                {
-                    entities: [{ block: 'D' }],
-                    tech: 'bh'
-                }
-            ]
+            bemDeps.resolve(decl, deps, { tech: 'js' }).must.be.eql({
+                entities: [{ block: 'A' }],
+                dependOn: [
+                    {
+                        entities: [{ block: 'C' }],
+                        tech: 'css'
+                    },
+                    {
+                        entities: [{ block: 'D' }],
+                        tech: 'bh'
+                    }
+                ]
+            });
         });
     });
 
