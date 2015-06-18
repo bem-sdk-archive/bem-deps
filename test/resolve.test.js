@@ -18,7 +18,7 @@ describe('resolve', function () {
                 .must.throw('The decl list is empty. It\'s impossible to resolve empty decl list');
         });
 
-        it('should return identical decl list if no deps specified', function () {
+        it('should return identical decl if no deps specified', function () {
             var decl = [
                     { block: 'A' }
                 ],
@@ -42,7 +42,7 @@ describe('resolve', function () {
             expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
         });
 
-        it('should return identical decl list for specific tech for unspecified deps declaration', function () {
+        it('should return identical decl for specific tech for unspecified deps declaration', function () {
             var decl = [
                     { block: 'A' }
                 ],
@@ -51,7 +51,7 @@ describe('resolve', function () {
             expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
 
-        it('should return identical decl list for specific tech for empty deps declaration', function () {
+        it('should return identical decl for specific tech for empty deps declaration', function () {
             var decl = [
                     { block: 'A' }
                 ],
