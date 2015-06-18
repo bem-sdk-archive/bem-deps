@@ -2,6 +2,11 @@ var bemDeps = require('../lib/deps'),
     expect =  require('must'),
     _ = require('lodash');
 
+
+function isEntityAddedToEntities (entities, entity) {
+    return _.findIndex(entities, entity) !== -1;
+}
+
 describe('resolve', function () {
     describe('input processing', function () {
         it('should throw error if decl param is not defined', function () {
