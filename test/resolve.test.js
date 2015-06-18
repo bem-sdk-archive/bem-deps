@@ -69,7 +69,7 @@ describe('resolve', function () {
             expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
 
-        it('should ignore tech param if it\'s format differs from { tech: \'%tech_name%\' }', function () {
+        it('should allow to specify tech param as a string with tech name', function () {
             var decl = [
                     { block: 'A' }
                 ],
@@ -83,7 +83,7 @@ describe('resolve', function () {
                 tech = 'css',
                 resolved = resolve(decl, deps, tech);
 
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.false();
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
     });
 
