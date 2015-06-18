@@ -2,8 +2,7 @@ var bemDeps = require('../lib/deps'),
     expect =  require('must'),
     _ = require('lodash');
 
-
-function isEntityAddedToEntities (entities, entity) {
+function isEntityAdded (entities, entity) {
     return _.findIndex(entities, entity) !== -1;
 }
 
@@ -62,9 +61,10 @@ describe('resolve', function () {
                         dependOn: [{ entity: { block: 'B' } }]
                     }
                 ],
-                tech = 'css';
+                tech = 'css',
+                resolved = bemDeps.resolve(decl, deps, tech);
 
-            expect(bemDeps.resolve(decl, deps, tech).entities).not.to.include({ block: 'B' });
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.false();
         });
     });
 
@@ -79,7 +79,7 @@ describe('resolve', function () {
                 ],
                 resolved = bemDeps.resolve(decl, deps);
 
-            expect(resolved.entities).to.include({ block: 'B' });
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
 
         it('should allow entity to depend on multiple entities', function () {
@@ -97,8 +97,8 @@ describe('resolve', function () {
                 ],
                 resolved = bemDeps.resolve(decl, deps);
 
-            expect(resolved).to.include({ block: 'B' });
-            expect(resolved).to.include({ block: 'C' });
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
+            expect(isEntityAdded(resolved.entities, { block: 'C' })).to.be.true();
         });
 
         it('should ignore entity depend on itself', function () {
@@ -126,8 +126,8 @@ describe('resolve', function () {
                 ],
                 resolved = bemDeps.resolve(decl);
 
-            expect(resolved.entities).to.include({ block: 'A' });
-            expect(resolved.entities).to.include({ block: 'B' });
+            expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
 
         it('should include all blocks listed in decl for empty deps graph', function () {
@@ -138,8 +138,8 @@ describe('resolve', function () {
                 deps = [],
                 resolved = bemDeps.resolve(decl, deps);
 
-            expect(resolved.entities).to.include({ block: 'A' });
-            expect(resolved.entities).to.include({ block: 'B' });
+            expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
         it('should not include dependency if it\'s missing in decl and nobody from decl references it', function () {
             var decl = [
@@ -152,9 +152,10 @@ describe('resolve', function () {
                             { entity: { block: 'A' } }
                         ]
                     }
-                ];
+                ],
+                resolved = bemDeps.resolve(decl, deps);
 
-            expect(bemDeps.resolve(decl, deps)).not.to.include({ block: 'B' });
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.false();
         });
     });
 
@@ -360,7 +361,7 @@ describe('resolve', function () {
                 ],
                 resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
 
-            expect(resolved.entities).to.include({ block: 'B' });
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
 
         it('should allow entity to depend multiple entities when resolving deps for specific tech', function () {
@@ -376,8 +377,8 @@ describe('resolve', function () {
                 ],
                 resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
 
-            expect(resolved.entities).to.include({ block: 'B' });
-            expect(resolved.entities).to.include({ block: 'C' });
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
+            expect(isEntityAdded(resolved.entities, { block: 'C' })).to.be.true();
         });
 
         it('should ignore dependency if entity depends on itself when resolving deps for specific tech', function () {
@@ -495,7 +496,7 @@ describe('resolve', function () {
                 ],
                 resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-            expect(resolved.entities).to.include({ block: 'B' });
+            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
 
         it('should add tech dependency to dependOn section if this tech is not matching tech for which dependencies ' +
@@ -547,8 +548,8 @@ describe('resolve', function () {
 
             expect(resolved.dependOn).have.length(1);
             expect(resolved.dependOn[0]).to.include('js');
-            expect(resolved.dependOn[0].entities).to.include({ block: 'B' });
-            expect(resolved.dependOn[0].entities).to.include({ block: 'C' });
+            expect(isEntityAdded(resolved.dependOn[0].entities, { block: 'B' })).to.be.true();
+            expect(isEntityAdded(resolved.dependOn[0].entities, { block: 'C' })).to.be.true();
         });
     });
 
@@ -699,7 +700,7 @@ describe('resolve', function () {
 
             expect(resolved.dependOn).have.length(1);
             expect(resolved.dependOn[0]).to.include('css');
-            expect(resolved.dependOn[0].entities).to.include({ block: 'B' });
+            expect(isEntityAdded(resolved.dependOn[0].entities, { block: 'B' })).to.be.true();
         });
 
         it('should allow tech in entity to depend on several other techs of different entities', function () {
