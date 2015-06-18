@@ -8,14 +8,22 @@ function isEntityAdded (entities, entity) {
 
 describe('resolve', function () {
     describe('input processing', function () {
-        it('should throw error if decl param is not defined', function () {
-            (function () { bemDeps.resolve(); })
-                .must.throw('The decl list is not defined. It\'s impossible to resolve missing decl list');
+        it('should return empty result if decl param is not defined', function () {
+            var resolved = bemDeps.resolve();
+
+            expect(resolved).to.be.eql({
+                entities: [],
+                dependOn: []
+            });
         });
 
-        it('should throw error if decl param is empty', function () {
-            (function () { bemDeps.resolve([]); })
-                .must.throw('The decl list is empty. It\'s impossible to resolve empty decl list');
+        it('should return empty result if decl param is empty', function () {
+            var resolved = bemDeps.resolve();
+
+            expect(resolved).to.be.eql({
+                entities: [],
+                dependOn: []
+            });
         });
 
         it('should return identical decl if no deps specified', function () {
