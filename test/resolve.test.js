@@ -20,10 +20,11 @@ describe('resolve', function () {
 
         it('should return identical decl list if no deps specified', function () {
             var decl = [
-                { block: 'A' }
-            ];
+                    { block: 'A' }
+                ],
+                resolved = bemDeps.resolve(decl);
 
-            expect(bemDeps.resolve(decl).entities).to.be.eql(decl);
+            expect(resolved.entities).to.be.eql(decl);
         });
 
         it('should allow to specify single-element deps graph as object', function () {
@@ -44,18 +45,20 @@ describe('resolve', function () {
         it('should return identical decl list for specific tech for unspecified deps declaration', function () {
             var decl = [
                     { block: 'A' }
-                ];
+                ],
+                resolved = bemDeps.resolve(decl, undefined, { tech: 'css' });
 
-            expect(bemDeps.resolve(decl, undefined, { tech: 'css' }).entities).to.be.eql([{ block: 'A' }]);
+            expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
 
         it('should return identical decl list for specific tech for empty deps declaration', function () {
             var decl = [
                     { block: 'A' }
                 ],
-                deps = [];
+                deps = [],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
 
-            expect(bemDeps.resolve(decl, deps, { tech: 'css' }).entities).to.be.eql([{ block: 'A' }]);
+            expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
 
         it('should ignore tech param if it\'s format differs from { tech: \'%tech_name%\' }', function () {
@@ -120,9 +123,10 @@ describe('resolve', function () {
                             { entity: { block: 'A' } }
                         ]
                     }
-                ];
+                ],
+                resolved = bemDeps.resolve(decl, deps);
 
-            expect(bemDeps.resolve(decl, deps).entities).to.be.eql([{ block: 'A' }]);
+            expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
     });
 
@@ -420,9 +424,10 @@ describe('resolve', function () {
                             }
                         ]
                     }
-                ];
+                ],
+                resolved = bemDeps.resolve(decl, deps);
 
-            expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
+            expect(resolved.dependOn).to.be.empty();
         });
 
         it('should ignore dependency when tech in entity depends on another tech in another entity if no tech to ' +
@@ -439,9 +444,10 @@ describe('resolve', function () {
                             }
                         ]
                     }
-                ];
+                ],
+                resolved = bemDeps.resolve(decl, deps);
 
-            expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
+            expect(resolved.dependOn).to.be.empty();
         });
 
         it('should ignore dependency when tech of entity depend on another entities if no tech to resolve' +
@@ -458,9 +464,10 @@ describe('resolve', function () {
                             { entity: { block: 'C' } }
                         ]
                     }
-                ];
+                ],
+                resolved = bemDeps.resolve(decl, deps);
 
-            expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
+            expect(resolved.dependOn).to.be.empty();
         });
 
         it('should ignore dependency when tech of entity depend on another entities if no tech to resolve ' +
@@ -479,9 +486,10 @@ describe('resolve', function () {
                             }
                         ]
                     }
-                ];
+                ],
+                resolved = bemDeps.resolve(decl, deps);
 
-            expect(bemDeps.resolve(decl, deps).dependOn).to.be.empty();
+            expect(resolved.dependOn).to.be.empty();
         });
     });
 
@@ -730,9 +738,10 @@ describe('resolve', function () {
                             }
                         ]
                     }
-                ];
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
 
-            expect(bemDeps.resolve(decl, deps, { tech: 'js' }).dependOn).to.be.eql([
+            expect(resolved.dependOn).to.be.eql([
                 {
                     entities: [{ block: 'C' }],
                     tech: 'css'
@@ -763,8 +772,10 @@ describe('resolve', function () {
                             }
                         ]
                     }
-                ];
-            expect(bemDeps.resolve(decl, deps, { tech: 'js' }).dependOn).to.be.eql([
+                ],
+                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+
+            expect(resolved.dependOn).to.be.eql([
                 {
                     entities: [{ block: 'B' }],
                         tech: 'css'
