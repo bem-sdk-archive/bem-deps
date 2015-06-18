@@ -1,4 +1,4 @@
-var bemDeps = require('../lib/deps'),
+var resolve = require('../lib/index').resolve,
     expect =  require('must'),
     _ = require('lodash');
 
@@ -9,7 +9,7 @@ function isEntityAdded (entities, entity) {
 describe('resolve', function () {
     describe('input processing', function () {
         it('should return empty result if decl param is not defined', function () {
-            var resolved = bemDeps.resolve();
+            var resolved = resolve();
 
             expect(resolved).to.be.eql({
                 entities: [],
@@ -18,7 +18,7 @@ describe('resolve', function () {
         });
 
         it('should return empty result if decl param is empty', function () {
-            var resolved = bemDeps.resolve();
+            var resolved = resolve();
 
             expect(resolved).to.be.eql({
                 entities: [],
@@ -30,7 +30,7 @@ describe('resolve', function () {
             var decl = [
                     { block: 'A' }
                 ],
-                resolved = bemDeps.resolve(decl);
+                resolved = resolve(decl);
 
             expect(resolved.entities).to.be.eql(decl);
         });
@@ -45,7 +45,7 @@ describe('resolve', function () {
                         }
                     ]
                 },
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
         });
@@ -54,7 +54,7 @@ describe('resolve', function () {
             var decl = [
                     { block: 'A' }
                 ],
-                resolved = bemDeps.resolve(decl, undefined, { tech: 'css' });
+                resolved = resolve(decl, undefined, { tech: 'css' });
 
             expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
@@ -64,7 +64,7 @@ describe('resolve', function () {
                     { block: 'A' }
                 ],
                 deps = [],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+                resolved = resolve(decl, deps, { tech: 'css' });
 
             expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
@@ -81,7 +81,7 @@ describe('resolve', function () {
                     }
                 ],
                 tech = 'css',
-                resolved = bemDeps.resolve(decl, deps, tech);
+                resolved = resolve(decl, deps, tech);
 
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.false();
         });
@@ -96,7 +96,7 @@ describe('resolve', function () {
                         dependOn: [{ entity: { block: 'B' } }]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
@@ -114,7 +114,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
             expect(isEntityAdded(resolved.entities, { block: 'C' })).to.be.true();
@@ -132,7 +132,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
@@ -144,7 +144,7 @@ describe('resolve', function () {
                     { block: 'A' },
                     { block: 'B' }
                 ],
-                resolved = bemDeps.resolve(decl);
+                resolved = resolve(decl);
 
             expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
@@ -156,7 +156,7 @@ describe('resolve', function () {
                     { block: 'B' }
                 ],
                 deps = [],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
@@ -173,7 +173,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.false();
         });
@@ -186,7 +186,7 @@ describe('resolve', function () {
                     { block: 'B' }
                 ],
                 deps = [],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(_.findIndex(resolved.entities, { block: 'A' }))
                 .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
@@ -202,7 +202,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(_.findIndex(resolved.entities, { block: 'A' }))
                 .to.be.before(_.findIndex(resolved.entities), { block: 'B' });
@@ -224,7 +224,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(_.findIndex(resolved.entities, { block: 'B' }))
                 .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
@@ -245,7 +245,7 @@ describe('resolve', function () {
                         }
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(_.findIndex(resolved.entities, { block: 'A' }))
                 .to.be.before(_.findIndex(resolved.entities, { block: 'C' }));
@@ -281,7 +281,7 @@ describe('resolve', function () {
                     }
                 ];
 
-            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+            (function () { resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
                 ' reference A <- B <- A');
         });
 
@@ -321,7 +321,7 @@ describe('resolve', function () {
                     }
                 ];
 
-            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+            (function () { resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
                 ' reference A <- B <- C <- A');
         });
 
@@ -361,7 +361,7 @@ describe('resolve', function () {
                     }
                 ];
 
-            (function () { bemDeps.resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+            (function () { resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
                 ' reference B <- C <- B');
         });
     });
@@ -379,7 +379,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+                resolved = resolve(decl, deps, { tech: 'css' });
 
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
@@ -395,7 +395,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+                resolved = resolve(decl, deps, { tech: 'css' });
 
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
             expect(isEntityAdded(resolved.entities, { block: 'C' })).to.be.true();
@@ -411,7 +411,7 @@ describe('resolve', function () {
                         dependOn: [{ entity: { block: 'A' } }]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+                resolved = resolve(decl, deps, { tech: 'css' });
 
             expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
@@ -433,7 +433,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(resolved.dependOn).to.be.empty();
         });
@@ -453,7 +453,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(resolved.dependOn).to.be.empty();
         });
@@ -473,7 +473,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(resolved.dependOn).to.be.empty();
         });
@@ -495,7 +495,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps);
+                resolved = resolve(decl, deps);
 
             expect(resolved.dependOn).to.be.empty();
         });
@@ -518,7 +518,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
@@ -539,7 +539,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+                resolved = resolve(decl, deps, { tech: 'css' });
 
             expect(resolved.dependOn).have.length(1);
             expect(resolved.dependOn[0]).to.be.eql({
@@ -568,7 +568,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+                resolved = resolve(decl, deps, { tech: 'css' });
 
             expect(resolved.dependOn).have.length(1);
             expect(resolved.dependOn[0]).to.include('js');
@@ -591,7 +591,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(_.findIndex(resolved.entities, { block: 'A' }))
                 .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
@@ -614,7 +614,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(_.findIndex(resolved.entities, { block: 'B' }))
                 .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
@@ -638,7 +638,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(_.findIndex(resolved.entities, { block: 'C' }))
                 .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
@@ -661,7 +661,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+                resolved = resolve(decl, deps, { tech: 'css' });
 
             expect(resolved.entities).to.include({ block: 'B' });
         });
@@ -680,7 +680,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+                resolved = resolve(decl, deps, { tech: 'css' });
 
             expect(resolved.entities).to.include({ block: 'B' });
             expect(resolved.entities).to.include({ block: 'C' });
@@ -697,7 +697,7 @@ describe('resolve', function () {
                         dependOn: [{ entity: { block: 'A' } }]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'css' });
+                resolved = resolve(decl, deps, { tech: 'css' });
 
             expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
@@ -720,7 +720,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(resolved.dependOn).have.length(1);
             expect(resolved.dependOn[0]).to.include('css');
@@ -747,7 +747,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(resolved.dependOn).to.be.eql([
                 {
@@ -781,7 +781,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(resolved.dependOn).to.be.eql([
                 {
@@ -813,7 +813,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(resolved.dependOn).to.be.empty();
         });
@@ -835,7 +835,7 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = bemDeps.resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(resolved.dependOn).to.be.empty();
         });
