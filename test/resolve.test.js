@@ -26,11 +26,19 @@ describe('resolve', function () {
             expect(bemDeps.resolve(decl).entities).to.be.eql(decl);
         });
 
-        it('should return identical decl list if deps graph is not an array', function () {
+        it('should allow to specify single-element deps graph as object', function () {
             var decl = [{ block: 'A' }],
-                deps = {};
+                deps = {
+                    entity: { block: 'A' },
+                    dependOn: [
+                        {
+                            entity: { block: 'B' }
+                        }
+                    ]
+                },
+                resolved = bemDeps.resolve(decl, deps);
 
-            expect(bemDeps.resolve(decl, deps).entities).to.be.eql(decl);
+            expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
         });
 
         it('should return identical decl list for specific tech for unspecified deps declaration', function () {
