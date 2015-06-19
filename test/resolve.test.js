@@ -455,7 +455,7 @@ describe('resolve', function () {
                 .and.to.be.below(indexD);
         });
 
-        it('should keep ordering of dependencies of dependency', function () {
+        it('should keep ordering for dependencies of dependency', function () {
             var decl = [{ block: 'A' }],
                 deps = [
                     {
@@ -481,7 +481,7 @@ describe('resolve', function () {
             expect(indexC).to.be.below(indexD);
         });
 
-        it('should keep ordering of dependencies of dependencies', function () {
+        it('should keep ordering for dependencies of dependencies', function () {
             var decl = [{ block: 'A' }],
                 deps = [
                     {
@@ -589,7 +589,30 @@ describe('resolve', function () {
     });
 
     describe('resolving dependency cycles', function () {
-        it('should throw error if detected direct cyclic dependencies', function () {
+        it('should not throw error if detected implicit cyclic dependency', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            { entity: { block: 'B' } }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            { entity: { block: 'A' } }
+                        ]
+                    }
+                ];
+
+            expect(function () { resolve(decl, deps); }).to.not.throw();
+        });
+
+        it('should throw error if detected direct cyclic explicit dependencies', function () {
             var decl = [
                     { block: 'A' },
                     { block: 'B' }
@@ -619,7 +642,7 @@ describe('resolve', function () {
                 ' reference A <- B <- A');
         });
 
-        it('should throw error if detected indirect cyclic dependencies', function () {
+        it('should throw error if detected indirect cyclic explicit dependencies', function () {
             var decl = [
                     { block: 'A' },
                     { block: 'B' },
@@ -659,7 +682,7 @@ describe('resolve', function () {
                 ' reference A <- B <- C <- A');
         });
 
-        it('should throw error if detected intermediate cyclic dependencies', function () {
+        it('should throw error if detected intermediate cyclic explicit dependencies', function () {
             var decl = [
                     { block: 'A' },
                     { block: 'B' },
