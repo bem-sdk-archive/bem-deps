@@ -219,10 +219,11 @@ describe('resolve', function () {
                     { block: 'B' }
                 ],
                 deps = [],
-                resolved = resolve(decl, deps);
+                resolved = resolve(decl, deps),
+                indexA = _.findIndex(resolved.entities, { block: 'A' }),
+                indexB = _.findIndex(resolved.entities, { block: 'B' });
 
-            expect(_.findIndex(resolved.entities, { block: 'A' }))
-                .to.be.below(_.findIndex(resolved.entities, { block: 'B' }));
+            expect(indexA).to.be.below(indexB);
         });
 
         it('should keep the recommended dependencies ordering described in deps', function () {
@@ -236,10 +237,11 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = resolve(decl, deps);
+                resolved = resolve(decl, deps),
+                indexB = _.findIndex(resolved.entities, { block: 'B' }),
+                indexC = _.findIndex(resolved.entities, { block: 'C' });
 
-            expect(_.findIndex(resolved.entities, { block: 'B' }))
-                .to.be.below(_.findIndex(resolved.entities), { block: 'C' });
+            expect(indexB).to.be.below(indexC);
         });
 
         it('should order entities described in decl before dependencies', function () {
@@ -306,13 +308,14 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = resolve(decl, deps);
+                resolved = resolve(decl, deps),
+                indexA = _.findIndex(resolved.entities, { block: 'A' }),
+                indexB = _.findIndex(resolved.entities, { block: 'B' });
 
-            expect(_.findIndex(resolved.entities, { block: 'B' }))
-                .to.be.below(_.findIndex(resolved.entities, { block: 'A' }));
+            expect(indexB).to.be.below(indexA);
         });
 
-        it('should reorder entities in decl if explicitly set in deps', function () {
+        it('should reorder entities in decl if explicitly described in deps', function () {
             var decl = [
                     { block: 'A' },
                     { block: 'B' }
@@ -350,12 +353,13 @@ describe('resolve', function () {
                         }
                     }
                 ],
-                resolved = resolve(decl, deps);
+                resolved = resolve(decl, deps),
+                indexA = _.findIndex(resolved.entities, { block: 'A' }),
+                indexB = _.findIndex(resolved.entities, { block: 'B' }),
+                indexC = _.findIndex(resolved.entities, { block: 'C' });
 
-            expect(_.findIndex(resolved.entities, { block: 'A' }))
-                .to.be.below(_.findIndex(resolved.entities, { block: 'C' }));
-            expect(_.findIndex(resolved.entities, { block: 'C' }))
-                .to.be.below(_.findIndex(resolved.entities, { block: 'B' }));
+            expect(indexA).to.be.below(indexC);
+            expect(indexC).to.be.below(indexB);
         });
     });
 
