@@ -231,16 +231,43 @@ describe('resolve', function () {
                     {
                         entity: { block: 'A' },
                         dependOn: [
-                            { entity: { block: 'B' } }
+                            { entity: { block: 'B' } },
+                            { entity: { block: 'C' } }
                         ]
                     }
                 ],
                 resolved = resolve(decl, deps);
 
-            expect(_.findIndex(resolved.entities, { block: 'A' }))
-                .to.be.below(_.findIndex(resolved.entities), { block: 'B' });
+            expect(_.findIndex(resolved.entities, { block: 'B' }))
+                .to.be.below(_.findIndex(resolved.entities), { block: 'C' });
         });
 
+        it('should order entities described in decl before dependencies', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'C' }
+                            }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps),
+                indexA = _.findIndex(resolved.entities, { block: 'A' }),
+                indexB = _.findIndex(resolved.entities, { block: 'B' }),
+                indexC = _.findIndex(resolved.entities, { block: 'C' });
+
+            expect(indexC).to.be.above(indexA)
+                .and.to.be.above(indexB);
+        });
+    });
+
+    describe('explicit ordering', function () {
         it('should place dependence before dependants if explicitly described in deps graph', function () {
             var decl = [
                     { block: 'A' },
