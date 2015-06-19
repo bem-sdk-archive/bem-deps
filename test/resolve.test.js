@@ -170,7 +170,7 @@ describe('resolve', function () {
             expect(resolved.entities).to.contain({ block: 'A' });
         });
 
-        it('should allow entity not listed in decl to depend on another entity', function () {
+        it('should allow dependency to depend on another entity', function () {
             var decl = [{ block: 'A' }],
                 deps = [
                     {
@@ -191,7 +191,7 @@ describe('resolve', function () {
             expect(resolved.entities).to.contain({ block: 'C' });
         });
 
-        it('should allow entity not listed in decl to depend on multiple another entities', function () {
+        it('should allow dependency to depend on multiple another entities', function () {
             var decl = [{ block: 'A' }],
                 deps = [
                     {
@@ -334,8 +334,161 @@ describe('resolve', function () {
 
             expect(indexA).to.be.below(indexB);
         });
+    });
 
-        it('should keep ordering for dependencies of another dependencies exactly as it was described in deps');
+    describe('recommended ordering for dependencies of dependencies', function () {
+        it('should place dependency of dependency after entities from decl and dependencies of decl', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' }
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            {
+                                entity: { block: 'C' }
+                            }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps),
+                indexB = _.findIndex(resolved.entities, { block: 'B' }),
+                indexC = _.findIndex(resolved.entities, { block: 'C' });
+
+            expect(indexB).to.be.below(indexC);
+        });
+
+        it('should place dependencies of dependency after entities from decl and dependencies of decl', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' }
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            { entity: { block: 'C' } },
+                            { entity: { block: 'D' } }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps),
+                indexB = _.findIndex(resolved.entities, { block: 'B' }),
+                indexC = _.findIndex(resolved.entities, { block: 'C' }),
+                indexD = _.findIndex(resolved.entities, { block: 'D' });
+
+            expect(indexB).to.be.below(indexC)
+                .and.to.be.below(indexD);
+        });
+
+        it('should place dependencies of dependencies after entities from decl and dependencies of decl', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' }
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            {
+                                entity: { block: 'C' }
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'C' },
+                        dependOn: [
+                            {
+                                entity: { block: 'D' }
+                            }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps),
+                indexB = _.findIndex(resolved.entities, { block: 'B' }),
+                indexC = _.findIndex(resolved.entities, { block: 'C' }),
+                indexD = _.findIndex(resolved.entities, { block: 'D' });
+
+            expect(indexB).to.be.below(indexC)
+                .and.to.be.below(indexD);
+        });
+
+        it('should keep ordering of dependencies of dependency', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' }
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            { entity: { block: 'C' } },
+                            { entity: { block: 'D' } }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps),
+                indexC = _.findIndex(resolved.entities, { block: 'C' }),
+                indexD = _.findIndex(resolved.entities, { block: 'D' });
+
+            expect(indexC).to.be.below(indexD);
+        });
+
+        it('should keep ordering of dependencies of dependencies', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' }
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            {
+                                entity: { block: 'C' }
+                            }
+                        ]
+                    },
+                    {
+                        entity: { block: 'C' },
+                        dependOn: [
+                            {
+                                entity: { block: 'D' }
+                            }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps),
+                indexC = _.findIndex(resolved.entities, { block: 'C' }),
+                indexD = _.findIndex(resolved.entities, { block: 'D' });
+
+            expect(indexC).to.be.below(indexD);
+        });
     });
 
     describe('explicit ordering', function () {
