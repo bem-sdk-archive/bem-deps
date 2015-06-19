@@ -190,6 +190,29 @@ describe('resolve', function () {
 
             expect(resolved.entities).to.contain({ block: 'C' });
         });
+
+        it('should allow entity not listed in decl to depend on multiple another entities', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            { entity: { block: 'B' } }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            { entity: { block: 'C' } },
+                            { entity: { block: 'D' } }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps);
+
+            expect(resolved.entities).to.contain({ block: 'C' })
+                .and.to.contain({ block: 'D' });
+        });
     });
 
     describe('resolving entities missing in deps graph', function () {
