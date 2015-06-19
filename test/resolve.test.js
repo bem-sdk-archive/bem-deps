@@ -212,7 +212,7 @@ describe('resolve', function () {
         });
     });
 
-    describe('recommended and explicit ordering', function () {
+    describe('recommended ordering', function () {
         it('should keep the recommended entities ordering described in decl', function () {
             var decl = [
                     { block: 'A' },
@@ -270,8 +270,7 @@ describe('resolve', function () {
     describe('explicit ordering', function () {
         it('should place dependence before dependants if explicitly described in deps graph', function () {
             var decl = [
-                    { block: 'A' },
-                    { block: 'B' }
+                    { block: 'A' }
                 ],
                 deps = [
                     {
@@ -288,6 +287,29 @@ describe('resolve', function () {
 
             expect(_.findIndex(resolved.entities, { block: 'B' }))
                 .to.be.below(_.findIndex(resolved.entities, { block: 'A' }));
+        });
+
+        it('should reorder entities in decl if explictly set in deps', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' },
+                                order: 'dependenceBeforeDependants'
+                            }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps),
+                indexA = _.findIndex(resolved.entities, { block: 'A' }),
+                indexB = _.findIndex(resolved.entities, { block: 'B' });
+
+            expect(indexB).to.be.below(indexA);
         });
 
         it('should keep the recommended entities order for entities with unspecified ordering', function () {
