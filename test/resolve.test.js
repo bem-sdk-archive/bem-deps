@@ -169,6 +169,27 @@ describe('resolve', function () {
 
             expect(resolved.entities).to.contain({ block: 'A' });
         });
+
+        it('should allow entity not listed in decl to depend on another entity', function () {
+            var decl = [{ block: 'A' }],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            { entity: { block: 'B' } }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            { entity: { block: 'C' } }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps);
+
+            expect(resolved.entities).to.contain({ block: 'C' });
+        });
     });
 
     describe('resolving entities missing in deps graph', function () {
@@ -290,6 +311,8 @@ describe('resolve', function () {
 
             expect(indexA).to.be.below(indexB);
         });
+
+        it('should keep ordering for dependencies of another dependencies exactly as it was described in deps');
     });
 
     describe('explicit ordering', function () {
