@@ -1,10 +1,6 @@
 var resolve = require('../lib/index').resolve,
-    expect =  require('must'),
+    expect =  require('chai').expect,
     _ = require('lodash');
-
-function isEntityAdded (entities, entity) {
-    return _.findIndex(entities, entity) !== -1;
-}
 
 describe('resolve', function () {
     describe('input processing', function () {
@@ -47,7 +43,7 @@ describe('resolve', function () {
                 },
                 resolved = resolve(decl, deps);
 
-            expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
+            expect(resolved.entities).to.contain({ block: 'B' });
         });
 
         it('should return identical decl for specific tech for unspecified deps declaration', function () {
@@ -83,7 +79,7 @@ describe('resolve', function () {
                 tech = 'css',
                 resolved = resolve(decl, deps, tech);
 
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
+            expect(resolved.entities).to.contain({ block: 'B' });
         });
 
         it('should return identical decl list if decl and tech specified', function () {
@@ -108,7 +104,7 @@ describe('resolve', function () {
                 ],
                 resolved = resolve(decl, deps);
 
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
+            expect(resolved.entities).to.contain({ block: 'B' });
         });
 
         it('should allow entity to depend on multiple entities', function () {
@@ -126,8 +122,8 @@ describe('resolve', function () {
                 ],
                 resolved = resolve(decl, deps);
 
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
-            expect(isEntityAdded(resolved.entities, { block: 'C' })).to.be.true();
+            expect(resolved.entities).to.contain({ block: 'B' })
+                .and.to.contain({ block: 'C' });
         });
 
         it('should ignore entity depend on itself', function () {
@@ -156,8 +152,8 @@ describe('resolve', function () {
                 ],
                 resolved = resolve(decl);
 
-            expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
+            expect(resolved.entities).to.contain({ block: 'A' })
+                .and.to.contain({ block: 'B' });
         });
 
         it('should include all blocks listed in decl for empty deps graph', function () {
@@ -168,8 +164,8 @@ describe('resolve', function () {
                 deps = [],
                 resolved = resolve(decl, deps);
 
-            expect(isEntityAdded(resolved.entities, { block: 'A' })).to.be.true();
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
+            expect(resolved.entities).to.contain({ block: 'A' })
+                .and.to.contain({ block: 'B' });
         });
         it('should not include dependency if it\'s missing in decl and nobody from decl references it', function () {
             var decl = [
@@ -185,7 +181,7 @@ describe('resolve', function () {
                 ],
                 resolved = resolve(decl, deps);
 
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.false();
+            expect(resolved.entities).not.to.contain({ block: 'A' });
         });
     });
 
@@ -199,7 +195,7 @@ describe('resolve', function () {
                 resolved = resolve(decl, deps);
 
             expect(_.findIndex(resolved.entities, { block: 'A' }))
-                .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
+                .to.be.below(_.findIndex(resolved.entities, { block: 'B' }));
         });
 
         it('should keep the recommended dependencies ordering described in deps', function () {
@@ -215,7 +211,7 @@ describe('resolve', function () {
                 resolved = resolve(decl, deps);
 
             expect(_.findIndex(resolved.entities, { block: 'A' }))
-                .to.be.before(_.findIndex(resolved.entities), { block: 'B' });
+                .to.be.below(_.findIndex(resolved.entities), { block: 'B' });
         });
 
         it('should place dependence before dependants if explicitly described in deps graph', function () {
@@ -237,7 +233,7 @@ describe('resolve', function () {
                 resolved = resolve(decl, deps);
 
             expect(_.findIndex(resolved.entities, { block: 'B' }))
-                .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
+                .to.be.below(_.findIndex(resolved.entities, { block: 'A' }));
         });
 
         it('should keep the recommended entities order for entities with unspecified ordering', function () {
@@ -258,9 +254,9 @@ describe('resolve', function () {
                 resolved = resolve(decl, deps);
 
             expect(_.findIndex(resolved.entities, { block: 'A' }))
-                .to.be.before(_.findIndex(resolved.entities, { block: 'C' }));
+                .to.be.below(_.findIndex(resolved.entities, { block: 'C' }));
             expect(_.findIndex(resolved.entities, { block: 'C' }))
-                .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
+                .to.be.below(_.findIndex(resolved.entities, { block: 'B' }));
         });
     });
 
@@ -291,7 +287,7 @@ describe('resolve', function () {
                     }
                 ];
 
-            (function () { resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+            expect(function () { resolve(decl, deps); }).to.throw('Unable to process deps: detected cyclic' +
                 ' reference A <- B <- A');
         });
 
@@ -331,7 +327,7 @@ describe('resolve', function () {
                     }
                 ];
 
-            (function () { resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+            expect(function () { resolve(decl, deps); }).to.throw('Unable to process deps: detected cyclic' +
                 ' reference A <- B <- C <- A');
         });
 
@@ -371,7 +367,7 @@ describe('resolve', function () {
                     }
                 ];
 
-            (function () { resolve(decl, deps); }).must.throw('Unable to process deps: detected cyclic' +
+            expect(function () { resolve(decl, deps); }).to.throw('Unable to process deps: detected cyclic' +
                 ' reference B <- C <- B');
         });
     });
@@ -391,7 +387,7 @@ describe('resolve', function () {
                 ],
                 resolved = resolve(decl, deps, { tech: 'css' });
 
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
+            expect(resolved.entities).to.contain({ block: 'B' });
         });
 
         it('should allow entity to depend multiple entities when resolving deps for specific tech', function () {
@@ -407,8 +403,8 @@ describe('resolve', function () {
                 ],
                 resolved = resolve(decl, deps, { tech: 'css' });
 
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
-            expect(isEntityAdded(resolved.entities, { block: 'C' })).to.be.true();
+            expect(resolved.entities).to.contain({ block: 'B' })
+                .and.to.contain({ block: 'C' });
         });
 
         it('should ignore dependency if entity depends on itself when resolving deps for specific tech', function () {
@@ -530,7 +526,7 @@ describe('resolve', function () {
                 ],
                 resolved = resolve(decl, deps, { tech: 'js' });
 
-            expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
+            expect(resolved.entities).to.contain({ block: 'B' });
         });
 
         it('should add tech dependency to dependOn section if this tech is not matching tech for which dependencies ' +
@@ -582,8 +578,8 @@ describe('resolve', function () {
 
             expect(resolved.dependOn).have.length(1);
             expect(resolved.dependOn[0]).to.include('js');
-            expect(isEntityAdded(resolved.dependOn[0].entities, { block: 'B' })).to.be.true();
-            expect(isEntityAdded(resolved.dependOn[0].entities, { block: 'C' })).to.be.true();
+            expect(resolved.dependOn[0].entities).to.contain({ block: 'B' })
+                .and.to.contain({ block: 'C' });
         });
     });
 
@@ -604,7 +600,7 @@ describe('resolve', function () {
                 resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(_.findIndex(resolved.entities, { block: 'A' }))
-                .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
+                .to.be.below(_.findIndex(resolved.entities, { block: 'B' }));
         });
 
         it('should place dependence before dependants in entities list for dependency with same tech with tech ' +
@@ -627,7 +623,7 @@ describe('resolve', function () {
                 resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(_.findIndex(resolved.entities, { block: 'B' }))
-                .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
+                .to.be.below(_.findIndex(resolved.entities, { block: 'A' }));
         });
 
         it('should keep recommended ordering in entities list for tech dependencies with save tech with tech ' +
@@ -651,9 +647,9 @@ describe('resolve', function () {
                 resolved = resolve(decl, deps, { tech: 'js' });
 
             expect(_.findIndex(resolved.entities, { block: 'C' }))
-                .to.be.before(_.findIndex(resolved.entities, { block: 'A' }));
+                .to.be.below(_.findIndex(resolved.entities, { block: 'A' }));
             expect(_.findIndex(resolved.entities, { block: 'A' }))
-                .to.be.before(_.findIndex(resolved.entities, { block: 'B' }));
+                .to.be.below(_.findIndex(resolved.entities, { block: 'B' }));
         });
     });
 
@@ -673,7 +669,7 @@ describe('resolve', function () {
                 ],
                 resolved = resolve(decl, deps, { tech: 'css' });
 
-            expect(resolved.entities).to.include({ block: 'B' });
+            expect(resolved.entities).to.contain({ block: 'B' });
         });
 
         it('should allow tech in entity to depend on multiple entities', function () {
@@ -692,8 +688,8 @@ describe('resolve', function () {
                 ],
                 resolved = resolve(decl, deps, { tech: 'css' });
 
-            expect(resolved.entities).to.include({ block: 'B' });
-            expect(resolved.entities).to.include({ block: 'C' });
+            expect(resolved.entities).to.contain({ block: 'B' })
+                .and.to.contain({ block: 'C' });
         });
 
         it('should ignore dependency if tech in entity depends on itself', function () {
@@ -734,7 +730,7 @@ describe('resolve', function () {
 
             expect(resolved.dependOn).have.length(1);
             expect(resolved.dependOn[0]).to.include('css');
-            expect(isEntityAdded(resolved.dependOn[0].entities, { block: 'B' })).to.be.true();
+            expect(resolved.dependOn[0].entities).to.contain({ block: 'B' });
         });
 
         it('should allow tech in entity to depend on several other techs of different entities', function () {
