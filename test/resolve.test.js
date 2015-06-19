@@ -971,10 +971,11 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' }),
+                indexA = _.findIndex(resolved.entities, { block: 'A' }),
+                indexB = _.findIndex(resolved.entities, { block: 'B' });
 
-            expect(_.findIndex(resolved.entities, { block: 'B' }))
-                .to.be.below(_.findIndex(resolved.entities, { block: 'A' }));
+            expect(indexB).to.be.below(indexA);
         });
 
         it('should keep recommended ordering in entities list for tech dependencies with save tech with tech ' +
@@ -995,12 +996,13 @@ describe('resolve', function () {
                         ]
                     }
                 ],
-                resolved = resolve(decl, deps, { tech: 'js' });
+                resolved = resolve(decl, deps, { tech: 'js' }),
+                indexA = _.findIndex(resolved.entities, { block: 'A' }),
+                indexB = _.findIndex(resolved.entities, { block: 'B' }),
+                indexC = _.findIndex(resolved.entities, { block: 'C' });
 
-            expect(_.findIndex(resolved.entities, { block: 'C' }))
-                .to.be.below(_.findIndex(resolved.entities, { block: 'A' }));
-            expect(_.findIndex(resolved.entities, { block: 'A' }))
-                .to.be.below(_.findIndex(resolved.entities, { block: 'B' }));
+            expect(indexC).to.be.below(indexA);
+            expect(indexA).to.be.below(indexB);
         });
     });
 
