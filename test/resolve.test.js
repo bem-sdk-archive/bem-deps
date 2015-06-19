@@ -265,6 +265,29 @@ describe('resolve', function () {
             expect(indexC).to.be.above(indexA)
                 .and.to.be.above(indexB);
         });
+
+        it('should not change order for entities listed in decl if they are described in deps as each others' +
+            ' dependencies and ordering is not specified explicitly', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            {
+                                entity: { block: 'B' }
+                            }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps),
+                indexA = _.findIndex(resolved.entities, { block: 'A' }),
+                indexB = _.findIndex(resolved.entities, { block: 'B' });
+
+            expect(indexA).to.be.below(indexB);
+        });
     });
 
     describe('explicit ordering', function () {
@@ -289,7 +312,7 @@ describe('resolve', function () {
                 .to.be.below(_.findIndex(resolved.entities, { block: 'A' }));
         });
 
-        it('should reorder entities in decl if explictly set in deps', function () {
+        it('should reorder entities in decl if explicitly set in deps', function () {
             var decl = [
                     { block: 'A' },
                     { block: 'B' }
