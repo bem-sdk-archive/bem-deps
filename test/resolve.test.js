@@ -142,6 +142,33 @@ describe('resolve', function () {
 
             expect(resolved.entities).to.be.eql([{ block: 'A' }]);
         });
+
+        it('should add all entities listed in decl to result entities if they were mentioned in deps', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            { entity: { block: 'B' } }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps);
+
+            expect(resolved.entities).to.contain({ block: 'A' });
+        });
+
+        it('should add all entities listed in decl to result entities if they were not mentioned in deps', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                deps = [],
+                resolved = resolve(decl, deps);
+
+            expect(resolved.entities).to.contain({ block: 'A' });
+        });
     });
 
     describe('resolving entities missing in deps graph', function () {
