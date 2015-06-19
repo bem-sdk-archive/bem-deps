@@ -213,6 +213,32 @@ describe('resolve', function () {
             expect(resolved.entities).to.contain({ block: 'C' })
                 .and.to.contain({ block: 'D' });
         });
+
+        it('should include entity to result once if multiple entities depend on this entity', function () {
+            var decl = [
+                    { block: 'A' },
+                    { block: 'B' }
+                ],
+                deps = [
+                    {
+                        entity: { block: 'A' },
+                        dependOn: [
+                            { entity: { block: 'C' } }
+                        ]
+                    },
+                    {
+                        entity: { block: 'B' },
+                        dependOn: [
+                            { entity: { block: 'C' } }
+                        ]
+                    }
+                ],
+                resolved = resolve(decl, deps),
+                firstIndex = _.findIndex(resolved.entities, {}),
+                lastIndex = _.findIndex(resolved.entities, {});
+
+            expect(firstIndex).to.be.equal(lastIndex);
+        });
     });
 
     describe('resolving entities missing in deps graph', function () {
