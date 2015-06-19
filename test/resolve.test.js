@@ -85,6 +85,16 @@ describe('resolve', function () {
 
             expect(isEntityAdded(resolved.entities, { block: 'B' })).to.be.true();
         });
+
+        it('should return identical decl list if decl and tech specified', function () {
+            var decl = [
+                    { block: 'A' }
+                ],
+                tech = { tech: 'css' },
+                resolved = resolve(decl, tech);
+
+            expect(resolved.entities).to.be.eql(decl);
+        });
     });
 
     describe('resolving basic dependencies', function () {
