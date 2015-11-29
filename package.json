@@ -18,9 +18,12 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "bem-naming": "^0.5.1"
+  },
   "devDependencies": {
     "chai": "3.0.0",
+    "cli-table": "^0.3.1",
     "istanbul": "0.3.14",
     "jscs": "1.13.1",
     "jshint": "2.8.0",

@@ -1,5 +1,5 @@
 var expect  = require('chai').expect,
-    _       = require('lodash'),
+    findIndex = require('../../util').findIndex,
     resolve = require('../../../lib/index').resolve;
 
 describe('resolve: ordering priority - ordered deps vs unordered deps', function () {
@@ -20,8 +20,8 @@ describe('resolve: ordering priority - ordered deps vs unordered deps', function
                 }
             ],
             resolved = resolve(decl, deps),
-            indexA = _.findIndex(resolved.entities, { block: 'A' }),
-            indexB = _.findIndex(resolved.entities, { block: 'B' });
+            indexA = findIndex(resolved.entities, { block: 'A' }),
+            indexB = findIndex(resolved.entities, { block: 'B' });
 
         expect(indexB).to.be.below(indexA);
     });
@@ -45,8 +45,8 @@ describe('resolve: ordering priority - ordered deps vs unordered deps', function
                 }
             ],
             resolved = resolve(decl, deps),
-            indexB = _.findIndex(resolved.entities, { block: 'B' }),
-            indexC = _.findIndex(resolved.entities, { block: 'C' });
+            indexB = findIndex(resolved.entities, { block: 'B' }),
+            indexC = findIndex(resolved.entities, { block: 'C' });
 
         expect(indexC).to.be.below(indexB);
     });

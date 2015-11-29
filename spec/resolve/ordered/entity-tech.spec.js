@@ -1,5 +1,6 @@
 var expect  = require('chai').expect,
-    _       = require('lodash'),
+    findIndex = require('../../util').findIndex,
+    findLastIndex = require('../../util').findLastIndex,
     resolve = require('../../../lib/index').resolve;
 
 describe('resolving ordered dependencies: entity - tech', function () {
@@ -190,8 +191,8 @@ describe('resolving ordered dependencies: entity - tech', function () {
             ],
             opts = { tech: 'css' },
             resolved = resolve(decl, deps, opts),
-            firstIndex = _.findIndex(resolved.entities, { block: 'C' }),
-            lastIndex = _.findLastIndex(resolved.entities, { block: 'C' });
+            firstIndex = findIndex(resolved.entities, { block: 'C' }),
+            lastIndex = findLastIndex(resolved.entities, { block: 'C' });
 
         expect(resolved.entities).to.contain({ block: 'C' });
         expect(firstIndex).to.be.equal(lastIndex);

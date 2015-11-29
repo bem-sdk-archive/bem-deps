@@ -1,5 +1,6 @@
 var expect  = require('chai').expect,
-    _       = require('lodash'),
+    findIndex = require('../../util').findIndex,
+    findLastIndex = require('../../util').findLastIndex,
     resolve = require('../../../lib/index').resolve;
 
 describe('resolving unordered deps: common', function () {
@@ -112,8 +113,8 @@ describe('resolving unordered deps: common', function () {
                 }
             ],
             resolved = resolve(decl, deps),
-            firstIndex = _.findIndex(resolved.entities, { block: 'C' }),
-            lastIndex = _.findLastIndex(resolved.entities, { block: 'C' });
+            firstIndex = findIndex(resolved.entities, { block: 'C' }),
+            lastIndex = findLastIndex(resolved.entities, { block: 'C' });
 
         expect(resolved.entities).to.contain({ block: 'C' });
         expect(firstIndex).to.be.equal(lastIndex);
