@@ -1,7 +1,7 @@
-var expect  = require('chai').expect,
-    findIndex = require('../../util').findIndex,
-    findLastIndex = require('../../util').findLastIndex,
-    resolve = require('../../../lib/index').resolve;
+import { expect } from 'chai';
+import { findIndex } from '../../util';
+import { findLastIndex } from '../../util';
+import { resolve } from '../../../lib/index';
 
 describe('resolving ordered dependencies: tech - entity', function () {
     it('should resolve tech in entity depending on another entity', function () {

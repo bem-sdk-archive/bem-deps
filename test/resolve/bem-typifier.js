@@ -1,30 +1,31 @@
-var expect = require('chai').expect,
-    BemTypifier = require('../../lib/resolve/bem-typifier');
+var expect = require('chai').expect;
+
+import BemTypifier from '../../lib/resolve/bem-typifier';
 
 describe('resolve::BemTypifier()', function () {
     describe('constructor', function () {
         it('should return empty array with blocks', function () {
             var typifier = new BemTypifier();
 
-            expect(typifier.getBlocks()).to.be.deep.equal([]);
+            expect(Array.from(typifier.blocks())).to.be.deep.equal([]);
         });
 
         it('should return empty array with modificators of blocks', function () {
             var typifier = new BemTypifier();
 
-            expect(typifier.getBlockModificators()).to.be.deep.equal([]);
+            expect(Array.from(typifier.blockModificators())).to.be.deep.equal([]);
         });
 
         it('should return empty array with elements', function () {
             var typifier = new BemTypifier();
 
-            expect(typifier.getElements()).to.be.deep.equal([]);
+            expect(Array.from(typifier.elements())).to.be.deep.equal([]);
         });
 
         it('should return empty array with modificators of elements', function () {
             var typifier = new BemTypifier();
 
-            expect(typifier.getElementModificators()).to.be.deep.equal([]);
+            expect(Array.from(typifier.elementModificators())).to.be.deep.equal([]);
         });
     });
 
@@ -35,7 +36,7 @@ describe('resolve::BemTypifier()', function () {
 
             typifier.typify(entity);
 
-            expect(typifier.getBlocks()).to.be.include(entity);
+            expect(Array.from(typifier.blocks())).to.be.include(entity);
         });
 
         it('should typify modificator of block', function () {
@@ -44,7 +45,7 @@ describe('resolve::BemTypifier()', function () {
 
             typifier.typify(entity);
 
-            expect(typifier.getBlockModificators()).to.be.include(entity);
+            expect(Array.from(typifier.blockModificators())).to.be.include(entity);
         });
 
         it('should typify element', function () {
@@ -53,7 +54,7 @@ describe('resolve::BemTypifier()', function () {
 
             typifier.typify(entity);
 
-            expect(typifier.getElements()).to.be.include(entity);
+            expect(Array.from(typifier.elements())).to.be.include(entity);
         });
 
         it('should typify modificator of element', function () {
@@ -62,7 +63,7 @@ describe('resolve::BemTypifier()', function () {
 
             typifier.typify(entity);
 
-            expect(typifier.getElementModificators()).to.be.include(entity);
+            expect(Array.from(typifier.elementModificators())).to.be.include(entity);
         });
     });
 
@@ -74,7 +75,7 @@ describe('resolve::BemTypifier()', function () {
             typifier.typify(entity);
             typifier.typify(entity);
 
-            expect(typifier.getBlocks()).to.be.deep.equal([entity]);
+            expect(Array.from(typifier.blocks())).to.be.deep.equal([entity]);
         });
 
         it('should add same modificator of block only once', function () {
@@ -84,7 +85,7 @@ describe('resolve::BemTypifier()', function () {
             typifier.typify(entity);
             typifier.typify(entity);
 
-            expect(typifier.getBlockModificators()).to.be.deep.equal([entity]);
+            expect(Array.from(typifier.blockModificators())).to.be.deep.equal([entity]);
         });
 
         it('should add same element only once', function () {
@@ -94,7 +95,7 @@ describe('resolve::BemTypifier()', function () {
             typifier.typify(entity);
             typifier.typify(entity);
 
-            expect(typifier.getElements()).to.be.deep.equal([entity]);
+            expect(Array.from(typifier.elements())).to.be.deep.equal([entity]);
         });
 
         it('should add same modificator of element only once', function () {
@@ -104,7 +105,7 @@ describe('resolve::BemTypifier()', function () {
             typifier.typify(entity);
             typifier.typify(entity);
 
-            expect(typifier.getElementModificators()).to.be.deep.equal([entity]);
+            expect(Array.from(typifier.elementModificators())).to.be.deep.equal([entity]);
         });
     });
 });

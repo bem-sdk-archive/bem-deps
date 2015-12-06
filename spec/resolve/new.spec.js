@@ -1,7 +1,7 @@
-var resolve = require('../../lib/index').resolve,
-    expect = require('chai').expect;
+import { expect } from 'chai';
+import { resolve } from '../../lib/index';
 
-describe.only('resolve: slices', function () {
+describe('resolve: slices', function () {
     it('1', function () {
         var decl = [
                 { block: 'A' },

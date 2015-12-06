@@ -1,5 +1,6 @@
-var expect = require('chai').expect,
-    isRelationWithRequiredTech = require('../../lib/resolve/is-relation-with-required-tech');
+var expect = require('chai').expect;
+
+import isRelationWithRequiredTech from '../../lib/resolve/is-relation-with-required-tech';
 
 describe('resolve::isRelationWithRequiredTech()', function () {
     it('should detect relation if required tech is not specified', function () {

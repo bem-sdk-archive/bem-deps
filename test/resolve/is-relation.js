@@ -1,5 +1,6 @@
-var expect = require('chai').expect,
-    isRelation = require('../../lib/resolve/is-relation');
+var expect = require('chai').expect;
+
+import isRelation from '../../lib/resolve/is-relation';
 
 describe('resolve::isRelation()', function () {
     var relation = {

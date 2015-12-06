@@ -1,5 +1,6 @@
-var expect = require('chai').expect,
-    isDeclarationDependency = require('../../lib/resolve/is-declaration-dependency');
+var expect = require('chai').expect;
+
+import isDeclarationDependency from '../../lib/resolve/is-declaration-dependency';
 
 describe('resolve::isDeclarationDependency()', function () {
     it('should not detect dependency if required tech is not specified', function () {

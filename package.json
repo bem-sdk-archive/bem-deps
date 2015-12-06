@@ -22,7 +22,8 @@
     "bem-naming": "^0.5.1"
   },
   "devDependencies": {
-    "chai": "3.0.0",
+    "babel-register": "6.3.13",
+    "chai": "3.4.1",
     "cli-table": "^0.3.1",
     "istanbul": "0.3.14",
     "jscs": "1.13.1",
@@ -34,7 +35,7 @@
   "scripts": {
     "test": "npm run lint && npm run unit",
     "lint": "jshint . && jscs . -c .jscs.js",
-    "unit": "mocha -R spec --opts spec/mocha.opts",
+    "unit": "mocha -R spec --opts spec/mocha.opts spec/",
     "bench": "matcha benchmark/*.js",
     "cover": "istanbul cover _mocha --opts spec/mocha.opts",
     "coveralls": "npm i coveralls && npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"

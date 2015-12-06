@@ -1,6 +1,6 @@
-var expect  = require('chai').expect,
-    findIndex = require('../../util').findIndex,
-    resolve = require('../../../lib/index').resolve;
+import { expect } from 'chai';
+import { findIndex } from '../../util';
+import { resolve } from '../../../lib/index';
 
 describe('resolving ordered deps: ordering', function () {
     it('should place ordered entity from decl before entity depending on it', function () {
