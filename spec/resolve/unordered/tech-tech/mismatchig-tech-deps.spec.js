@@ -268,7 +268,7 @@ describe('resolving unordered dependencies: tech - tech for mismatching tech', f
                 }
             ],
             opts = { tech: 'css' },
-            resolved = resolve(decl, deps, opts);
+            resolved = resolve(decl, deps, opts),
             jsDepsIndex = findIndex(resolved.dependOn, function (techDeps) {
                 return techDeps.tech === 'js';
             }),

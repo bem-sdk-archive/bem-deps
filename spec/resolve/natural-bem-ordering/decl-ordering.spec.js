@@ -66,7 +66,7 @@ describe('resolve: natural BEM entities ordering for decl', function () {
     it('should place block\'s boolean modifier before block\' key-value modifier', function () {
         var decl = [
                 { block: 'A', modName: 'm', modVal: 'any' },
-                { block: 'A', modName: 'n', modVal: true }
+                { block: 'A', modName: 'm', modVal: true }
             ],
             resolved = resolve(decl),
             indexBoolean = findIndex(resolved.entities, { block: 'A', modName: 'n', modVal: true }),
@@ -102,7 +102,7 @@ describe('resolve: natural BEM entities ordering for decl', function () {
     it('should place elem\'s boolean modifier before elem\' key-value modifier', function () {
         var decl = [
                 { block: 'A', elem: 'e', modName: 'm', modVal: 'any' },
-                { block: 'A', elem: 'e', modName: 'n', modVal: true }
+                { block: 'A', elem: 'e', modName: 'm', modVal: true }
             ],
             resolved = resolve(decl),
             indexBoolean = findIndex(resolved.entities, { block: 'A', elem: 'e', modName: 'n', modVal: true }),

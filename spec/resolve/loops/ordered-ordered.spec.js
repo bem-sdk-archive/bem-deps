@@ -190,7 +190,7 @@ describe('resolving loops: ordered-ordered', function () {
 
         expect(error.loop).to.be.deep.equal([
             { entity: { block: 'A' } },
-            { entity: { block: 'B' }, tech: 'css' },
+            { entity: { block: 'B' } /*, tech: 'css' */},
             { entity: { block: 'A' } }
         ]);
     });
@@ -233,7 +233,7 @@ describe('resolving loops: ordered-ordered', function () {
         expect(error.loop).to.be.deep.equal([
             { entity: { block: 'A' } },
             { entity: { block: 'B' } },
-            { entity: { block: 'A' }, tech: 'css' }
+            { entity: { block: 'A' }/*, tech: 'css' */}
         ]);
     });
 
@@ -293,9 +293,9 @@ describe('resolving loops: ordered-ordered', function () {
         }
 
         expect(error.loop).to.be.deep.equal([
-            { entity: { block: 'A' }, tech: 'css' },
-            { entity: { block: 'B' }, tech: 'css' },
-            { entity: { block: 'A' }, tech: 'css' }
+            { entity: { block: 'A' }/*, tech: 'css' */},
+            { entity: { block: 'B' }/*, tech: 'css' */},
+            { entity: { block: 'A' }/*, tech: 'css' */}
         ]);
     });
 

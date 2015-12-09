@@ -117,7 +117,7 @@ describe('resolve: natural BEM entities ordering for deps', function () {
                     entity: { block: 'A', modName: 'm', modVal: 'any' },
                     dependOn: [
                         {
-                            entity: { block: 'A', modName: 'n', modVal: true }
+                            entity: { block: 'A', modName: 'm', modVal: true }
                         }
                     ]
                 }
