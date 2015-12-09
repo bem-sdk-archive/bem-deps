@@ -22,9 +22,10 @@
     "bem-naming": "^0.5.1"
   },
   "devDependencies": {
+    "babel-polyfill": "^6.3.14",
     "babel-register": "6.3.13",
     "chai": "3.4.1",
-    "cli-table": "^0.3.1",
+    "cli-table": "0.3.1",
     "istanbul": "0.3.14",
     "jscs": "1.13.1",
     "jshint": "2.8.0",

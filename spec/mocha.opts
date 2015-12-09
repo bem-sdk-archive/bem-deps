@@ -1,5 +1,6 @@
 --ui bdd
 --reporter dot
 --require chai
+--require babel-polyfill
 --recursive
 --compilers js:babel-register

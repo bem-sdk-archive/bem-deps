@@ -1,5 +1,4 @@
-var expect = require('chai').expect;
-
+import { expect } from 'chai';
 import isRelationWithRequiredTech from '../../lib/resolve/is-relation-with-required-tech';
 
 describe('resolve::isRelationWithRequiredTech()', function () {

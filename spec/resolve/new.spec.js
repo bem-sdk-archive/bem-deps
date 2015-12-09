@@ -21,7 +21,7 @@ describe('resolve: slices', function () {
                     }]
                 }
             ];
-        var resolved = resolve();
+        var resolved = resolve(decl, relations);
 
         expect(resolved.entities).to.deep.equal([
             { block: 'A' },
@@ -53,7 +53,7 @@ describe('resolve: slices', function () {
                 }
             ];
 
-        var resolved = resolve();
+        var resolved = resolve(decl, relations);
 
         expect(resolved.entities).to.deep.equal([
             { block: 'C' },
@@ -83,7 +83,7 @@ describe('resolve: slices', function () {
                 }
             ];
 
-        var resolved = resolve();
+        var resolved = resolve(decl, relations);
 
         expect(resolved.entities).to.deep.equal([
             { block: 'C' },
