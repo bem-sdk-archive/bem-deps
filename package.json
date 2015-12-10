@@ -18,6 +18,7 @@
   "engines": {
     "node": ">= 0.10.0"
   },
+  "main": "dist/index.js",
   "dependencies": {
     "JSONStream": "^1.0.7",
     "bem-naming": "^0.5.1",

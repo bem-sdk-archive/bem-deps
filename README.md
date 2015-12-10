@@ -9,10 +9,11 @@ bem-deps
 ```js
 var path = require('path'),
     require('JSONStream').stringifyObject,
-    bemDeps = require('../dist'),
+    bemDeps = require('bem-deps'),
     read = bemDeps.read,
     parse = bemDeps.parse,
-    resolve = bemDeps.resolve;
+    resolve = bemDeps.resolve,
+    depsJsFormat = require('bem-deps/dist/formats/deps.js');
 
 var declaration = [
     { block: 'a' }
