@@ -7,20 +7,30 @@ bem-deps
 [![Dependency Status](http://img.shields.io/david/bem-incubator/bem-deps.svg?style=flat)](https://david-dm.org/bem-incubator/bem-deps)
 
 ```js
-import { stringifyObject } from 'JSONStream';
-
-import { read, parse, resolve } from 'bem-deps';
-import depsJsFormat from 'bem-deps/lib/formats/deps.js';
+var path = require('path'),
+    require('JSONStream').stringifyObject,
+    bemDeps = require('../dist'),
+    read = bemDeps.read,
+    parse = bemDeps.parse,
+    resolve = bemDeps.resolve;
 
 var declaration = [
     { block: 'a' }
 ];
 
-read({ levels: ['blocks'], depsJsFormat.reader })
+var relations = [];
+
+read({ levels: [
+     path.join(__dirname, 'blocks')
+]}, depsJsFormat.reader)
     .pipe(parse(depsJsFormat.parser))
-    .pipe(resolve({ declaration: declaration, options: { tech: 'css' } }))
-    .pipe(stringifyObject())
-    .pipe(process.stdout);
+    .on('data', function (data) {
+        relations.push(data)
+    })
+    .on('end', function () {
+        var res = resolve(declaration, relations, { tech: 'css' });
+        console.log('%j', res);
+    });
 ```
 
 License

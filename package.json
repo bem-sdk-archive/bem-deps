@@ -42,6 +42,7 @@
     "mocha": "2.2.5"
   },
   "scripts": {
+    "prepublish": "npm run dist",
     "test": "npm run lint && npm run unit",
     "lint": "jshint . && jscs . -c .jscs.js",
     "unit": "mocha -R spec --opts spec/mocha.opts spec/",
