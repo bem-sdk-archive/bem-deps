@@ -1,5 +1,4 @@
-var path = require('path'),
-    through2 = require('through2'),
+var through2 = require('through2'),
 
     bemDeps = require('..'),
     depsJsFormat = require('../dist/formats/deps.js');

@@ -7,8 +7,7 @@ bem-deps
 [![Dependency Status](http://img.shields.io/david/bem-incubator/bem-deps.svg?style=flat)](https://david-dm.org/bem-incubator/bem-deps)
 
 ```js
-var path = require('path'),
-    through2 = require('through2'),
+var through2 = require('through2'),
 
     bemDeps = require('bem-deps'),
     depsJsFormat = require('bem-deps/dist/formats/deps.js');
