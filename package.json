@@ -23,7 +23,7 @@
     "JSONStream": "^1.0.7",
     "bem-naming": "^0.5.1",
     "bem-walk": "^1.0.0-alpha1",
-    "deps-normalize": "^2.4.1",
+    "deps-normalize": "tadatuta/deps-normalize#patch",
     "lodash": "^3.10.1"
   },
   "devDependencies": {
