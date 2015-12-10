@@ -13,29 +13,12 @@ var path = require('path'),
     bemDeps = require('bem-deps'),
     depsJsFormat = require('bem-deps/dist/formats/deps.js');
 
-var declaration = [
-        { block: 'a' }
-    ],
-    levels = [
-         path.join(__dirname, 'blocks')
-    ],
-    tech = 'css',
-    relations = [];
+var declaration = [{ block: 'a' }],
+    levels = ['blocks'];
 
 bemDeps.read({ levels: levels }, depsJsFormat.reader)
     .pipe(bemDeps.parse(depsJsFormat.parser))
-    .pipe(through2.obj(
-        function (relation, enc, callback) {
-            relations.push(relation);
-            callback();
-        },
-        function (callback) {
-            var res = bemDeps.resolve(declaration, relations, { tech: tech });
-
-            this.push(res);
-            callback();
-        }
-    ))
+    .pipe(bemDeps.resolve(declaration, { tech: 'css' }))
     .pipe(through2.obj(function (result) {
         this.push(JSON.stringify(result, null, 4) + '\n');
     }))
@@ -43,11 +26,13 @@ bemDeps.read({ levels: levels }, depsJsFormat.reader)
 
 // {
 //     "entities": [
-//         { "block": "a" }
+//         { "block": "c" },
+//         { "block": "a" },
+//         { "block": "b" }
 //     ],
 //     "dependOn": [
 //         {
-//             "tech": "js",
+//             "tech": "bemhtml",
 //             "entities": [
 //                 { "block": "d" }
 //             ]

@@ -49,6 +49,6 @@
     "cover": "istanbul cover _mocha --opts spec/mocha.opts",
     "coveralls": "npm i coveralls && npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "dist": "gulp",
-    "examples": "npm run dist && node ./examples/silly.js"
+    "examples": "npm run dist && cd examples && node ./silly.js"
   }
 }

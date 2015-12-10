@@ -1,9 +1,8 @@
 ([{
-    shouldDeps: ['b'],
-    noDeps: 'b'
+    shouldDeps: 'b'
 }, {
-    tech: 'css',
-    mustDeps: [
-        {block: 'd', tech: 'js'}
+    tech: 'js',
+    shouldDeps: [
+        {block: 'd', tech: 'bemhtml'}
     ]
 }])
