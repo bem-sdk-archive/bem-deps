@@ -8,29 +8,52 @@ bem-deps
 
 ```js
 var path = require('path'),
+    through2 = require('through2'),
+
     bemDeps = require('bem-deps'),
-    read = bemDeps.read,
-    parse = bemDeps.parse,
-    resolve = bemDeps.resolve,
-    depsJsFormat = require('bem-deps/dist/formats/deps.js')['default'];
+    depsJsFormat = require('bem-deps/dist/formats/deps.js');
 
 var declaration = [
-    { block: 'a' }
-];
+        { block: 'a' }
+    ],
+    levels = [
+         path.join(__dirname, 'blocks')
+    ],
+    tech = 'css',
+    relations = [];
 
-var relations = [];
+bemDeps.read({ levels: levels }, depsJsFormat.reader)
+    .pipe(bemDeps.parse(depsJsFormat.parser))
+    .pipe(through2.obj(
+        function (relation, enc, callback) {
+            relations.push(relation);
+            callback();
+        },
+        function (callback) {
+            var res = bemDeps.resolve(declaration, relations, { tech: tech });
 
-read({ levels: [
-     path.join(__dirname, 'blocks')
-]}, depsJsFormat.reader)
-    .pipe(parse(depsJsFormat.parser))
-    .on('data', function (data) {
-        relations.push(data)
-    })
-    .on('end', function () {
-        var res = resolve(declaration, relations, { tech: 'css' });
-        console.log('%j', res);
-    });
+            this.push(res);
+            callback();
+        }
+    ))
+    .pipe(through2.obj(function (result) {
+        this.push(JSON.stringify(result, null, 4) + '\n');
+    }))
+    .pipe(process.stdout);
+
+// {
+//     "entities": [
+//         { "block": "a" }
+//     ],
+//     "dependOn": [
+//         {
+//             "tech": "js",
+//             "entities": [
+//                 { "block": "d" }
+//             ]
+//         }
+//     ]
+// }
 ```
 
 License
