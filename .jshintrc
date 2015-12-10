@@ -13,6 +13,7 @@
     "unused": true,
 
     "node": true,
+    "esnext": true,
 
     "expr": true,
     "sub": true
