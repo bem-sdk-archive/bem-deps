@@ -1,14 +1,9 @@
-var through2 = require('through2'),
+var bemDeps = require('..'),
+    toArray = require('stream-to-array');
 
-    bemDeps = require('..'),
-    depsJsFormat = require('../dist/formats/deps.js');
+toArray(bemDeps.load({ levels: ['blocks'] }), function (err, relations) {
+    var declaration = [{ block: 'a' }],
+        res = bemDeps.resolve(declaration, relations, { tech: 'js' });
 
-var declaration = [{ block: 'a' }];
-
-bemDeps.read({ levels: ['blocks'] }, depsJsFormat.reader)
-    .pipe(bemDeps.parse(depsJsFormat.parser))
-    .pipe(bemDeps.resolve(declaration, { tech: 'js' }))
-    .pipe(through2.obj(function (result) {
-        this.push(JSON.stringify(result, null, 4) + '\n');
-    }))
-    .pipe(process.stdout);
+    console.log(JSON.stringify(res, null, 4));
+});

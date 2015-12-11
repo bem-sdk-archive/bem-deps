@@ -6,21 +6,19 @@ bem-deps
 [![Coverage Status](https://img.shields.io/coveralls/bem-incubator/bem-deps.svg?branch=master&style=flat)](https://coveralls.io/r/bem-incubator/bem-deps)
 [![Dependency Status](http://img.shields.io/david/bem-incubator/bem-deps.svg?style=flat)](https://david-dm.org/bem-incubator/bem-deps)
 
+Usage
+-----
+
 ```js
-var through2 = require('through2'),
+var bemDeps = require('bem-deps'),
+    toArray = require('stream-to-array');
 
-    bemDeps = require('..'),
-    depsJsFormat = require('../dist/formats/deps.js');
+toArray(bemDeps.load({ levels: ['blocks'] }), function (err, relations) {
+    var declaration = [{ block: 'a' }],
+        res = bemDeps.resolve(declaration, relations, { tech: 'js' });
 
-var declaration = [{ block: 'a' }];
-
-bemDeps.read({ levels: ['blocks'] }, depsJsFormat.reader)
-    .pipe(bemDeps.parse(depsJsFormat.parser))
-    .pipe(bemDeps.resolve(declaration, { tech: 'js' }))
-    .pipe(through2.obj(function (result) {
-        this.push(JSON.stringify(result, null, 4) + '\n');
-    }))
-    .pipe(process.stdout);
+    console.log(JSON.stringify(res, null, 4));
+});
 
 // {
 //     "entities": [
