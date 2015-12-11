@@ -6,6 +6,13 @@ bem-deps
 [![Coverage Status](https://img.shields.io/coveralls/bem-incubator/bem-deps.svg?branch=master&style=flat)](https://coveralls.io/r/bem-incubator/bem-deps)
 [![Dependency Status](http://img.shields.io/david/bem-incubator/bem-deps.svg?style=flat)](https://david-dm.org/bem-incubator/bem-deps)
 
+Install
+-------
+
+```
+$ npm install --save-dev @bem/deps
+```
+
 Usage
 -----
 

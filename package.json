@@ -1,5 +1,5 @@
 {
-  "name": "bem-deps",
+  "name": "@bem/deps",
   "version": "0.0.1",
   "description": "",
   "keywords": [
@@ -19,6 +19,11 @@
     "node": ">= 0.10.0"
   },
   "main": "dist/index.js",
+  "files": [
+      "dist",
+      "LICENSE.txt",
+      "README.txt"
+  ],
   "dependencies": {
     "babel-polyfill": "6.3.14",
     "bem-naming": "0.5.1",
