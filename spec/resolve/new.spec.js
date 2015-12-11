@@ -2,6 +2,71 @@ import { expect } from 'chai';
 import { resolve } from '../../lib/index';
 
 describe('resolve: slices', function () {
+    it('111', function () {
+        var decl = [
+                { block: 'page' }
+            ],
+            relations = [{
+                "entity": {
+                    "block": "page"
+                },
+                "dependOn": [
+                    {
+                        "entity": {
+                            "block": "i-bem"
+                        },
+                        "order": "dependenceBeforeDependants"
+                    },
+                    {
+                        "entity": {
+                            "block": "i-bem",
+                            "elem": "dom",
+                            // "modName": "init",
+                            // "modVal": "auto"
+                        }
+                    },
+                    {
+                        "entity": {
+                            "block": "ua"
+                        }
+                    },
+                    {
+                        "entity": {
+                            "block": "page",
+                            "elem": "css",
+                            // "modName": "init",
+                            // "modVal": "auto"
+                        }
+                    }
+                ]
+            }];
+        var resolved = resolve(decl, relations);
+
+        expect(resolved.entities).to.deep.equal([
+            {
+             "block": "i-bem"
+            },
+            {
+             "block": "page"
+            },
+            {
+             "block": "i-bem",
+             "elem": "dom",
+            //  "modName": "init",
+            //  "modVal": "auto"
+            },
+            {
+             "block": "ua"
+            },
+            {
+             "block": "page",
+             "elem": "css"
+            //  "modName": "init",
+            //  "modVal": "auto"
+            }
+        ]);
+    });
+
     it('1', function () {
         var decl = [
                 { block: 'A' },
@@ -27,6 +92,59 @@ describe('resolve: slices', function () {
             { block: 'A' },
             { block: 'C' },
             { block: 'B' },
+            { block: 'D' }
+        ]);
+    });
+
+    it('234', function () {
+        var decl = [
+                { block: 'A' }
+            ],
+            relations = [
+                {
+                    entity: { block: 'A' },
+                    dependOn: [{
+                        entity: { block: 'B' },
+                        order: true
+                    },{
+                        entity: { block: 'C' },
+                        order: true
+                    }]
+                }
+            ];
+        var resolved = resolve(decl, relations);
+
+        expect(resolved.entities).to.deep.equal([
+            { block: 'B' },
+            { block: 'C' },
+            { block: 'A' }
+        ]);
+    });
+
+    it('444', function () {
+        var decl = [
+                { block: 'A' }
+            ],
+            relations = [
+                {
+                    entity: { block: 'A' },
+                    dependOn: [{
+                        entity: { block: 'B' },
+                        order: true
+                    },{
+                        entity: { block: 'D' }
+                    },{
+                        entity: { block: 'C' },
+                        order: true
+                    }]
+                }
+            ];
+        var resolved = resolve(decl, relations);
+
+        expect(resolved.entities).to.deep.equal([
+            { block: 'B' },
+            { block: 'C' },
+            { block: 'A' },
             { block: 'D' }
         ]);
     });
