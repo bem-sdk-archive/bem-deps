@@ -96,7 +96,57 @@ describe('resolve: slices', function () {
         ]);
     });
 
-    it('567', function () {
+    it('should put incoming relation as 567', function () {
+        var decl = [
+                { block: 'dropdown' },
+            ],
+            relations = [
+                {
+                    "entity": {
+                        "block": "dropdown"
+                    },
+                    "dependOn": [
+                        {
+                            "entity": {
+                                "block": "popup",
+                                "modName": "target",
+                                "modVal": true
+                            }
+                        },
+                        {
+                            "entity": {
+                                "block": "popup"
+                            }
+                        },
+                        {
+                            "entity": {
+                                "block": "popup",
+                                "modName": "target",
+                                "modVal": "anchor"
+                            }
+                        },
+                    ]
+                }
+            ];
+        var resolved = resolve(decl, relations);
+
+        expect(resolved.entities).to.deep.equal([
+            { block: 'dropdown' },
+            { block: "popup" },
+            {
+                "block": "popup",
+                "modName": "target",
+                "modVal": true
+            },
+            {
+                "block": "popup",
+                "modName": "target",
+                "modVal": "anchor"
+            }
+        ]);
+    });
+
+    it('should put incoming relation as 890', function () {
         var decl = [
                 { block: 'dropdown' },
             ],
@@ -124,6 +174,60 @@ describe('resolve: slices', function () {
                                 "modName": "target",
                                 "modVal": true
                             }
+                        },
+                    ]
+                }
+            ];
+        var resolved = resolve(decl, relations);
+
+        expect(resolved.entities).to.deep.equal([
+            { block: 'dropdown' },
+            { block: "popup" },
+            {
+                "block": "popup",
+                "modName": "target",
+                "modVal": true
+            },
+            {
+                "block": "popup",
+                "modName": "target",
+                "modVal": "anchor"
+            }
+        ]);
+    });
+
+    it('56e7', function () {
+        var decl = [
+                { block: 'dropdown' },
+            ],
+            relations = [
+                {
+                    "entity": {
+                        "block": "dropdown"
+                    },
+                    "dependOn": [
+                        {
+                            "entity": {
+                                "block": "a"
+                            }
+                        },
+                        {
+                            "entity": {
+                                "block": "b"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "entity": {
+                        "block": "b"
+                    },
+                    "dependOn": [
+                        {
+                            "entity": {
+                                "block": "c"
+                            },
+                            "order": true
                         }
                     ]
                 }
@@ -131,18 +235,10 @@ describe('resolve: slices', function () {
         var resolved = resolve(decl, relations);
 
         expect(resolved.entities).to.deep.equal([
-            { block: "popup" },
-            {
-                "block": "popup",
-                "modName": "target",
-                "modVal": true
-            },
             { block: 'dropdown' },
-            {
-                "block": "popup",
-                "modName": "target",
-                "modVal": "anchor"
-            }
+            { block: 'a' },
+            { block: 'c' },
+            { block: 'b' },
         ]);
     });
 
@@ -179,12 +275,12 @@ describe('resolve: slices', function () {
                 {
                     entity: { block: 'A' },
                     dependOn: [{
-                        entity: { block: 'B' },
+                        entity: { block: 'B-1' },
                         order: true
                     },{
-                        entity: { block: 'D' }
+                        entity: { block: 'D-4' }
                     },{
-                        entity: { block: 'C' },
+                        entity: { block: 'C-2' },
                         order: true
                     }]
                 }
@@ -192,10 +288,10 @@ describe('resolve: slices', function () {
         var resolved = resolve(decl, relations);
 
         expect(resolved.entities).to.deep.equal([
-            { block: 'B' },
-            { block: 'C' },
+            { block: 'B-1' },
+            { block: 'C-2' },
             { block: 'A' },
-            { block: 'D' }
+            { block: 'D-4' }
         ]);
     });
 
