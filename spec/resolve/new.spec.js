@@ -96,6 +96,56 @@ describe('resolve: slices', function () {
         ]);
     });
 
+    it('567', function () {
+        var decl = [
+                { block: 'dropdown' },
+            ],
+            relations = [
+                {
+                    "entity": {
+                        "block": "dropdown"
+                    },
+                    "dependOn": [
+                        {
+                            "entity": {
+                                "block": "popup"
+                            }
+                        },
+                        {
+                            "entity": {
+                                "block": "popup",
+                                "modName": "target",
+                                "modVal": "anchor"
+                            }
+                        },
+                        {
+                            "entity": {
+                                "block": "popup",
+                                "modName": "target",
+                                "modVal": true
+                            }
+                        }
+                    ]
+                }
+            ];
+        var resolved = resolve(decl, relations);
+
+        expect(resolved.entities).to.deep.equal([
+            { block: "popup" },
+            {
+                "block": "popup",
+                "modName": "target",
+                "modVal": true
+            },
+            { block: 'dropdown' },
+            {
+                "block": "popup",
+                "modName": "target",
+                "modVal": "anchor"
+            }
+        ]);
+    });
+
     it('234', function () {
         var decl = [
                 { block: 'A' }

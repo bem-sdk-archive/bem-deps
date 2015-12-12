@@ -1,6 +1,6 @@
 {
   "name": "@bem/deps",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "keywords": [
     "bem",
@@ -46,7 +46,8 @@
     "through2": "2.0.0"
   },
   "scripts": {
-    "prepublish": "npm run dist",
+    "clean": "rm -rf dist",
+    "prepublish": "npm run clean && npm run dist",
     "test": "npm run lint && npm run unit",
     "lint": "jshint . && jscs . -c .jscs.js",
     "spec": "mocha --opts spec/mocha.opts spec/",
