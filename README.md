@@ -17,7 +17,7 @@ Usage
 -----
 
 ```js
-var bemDeps = require('bem-deps'),
+var bemDeps = require('@bem/deps'),
     toArray = require('stream-to-array');
 
 toArray(bemDeps.load({ levels: ['blocks'] }), function (err, relations) {
