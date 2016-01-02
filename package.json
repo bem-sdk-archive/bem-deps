@@ -50,7 +50,7 @@
     "prepublish": "npm run clean && npm run dist",
     "test": "npm run lint && npm run unit",
     "lint": "jshint . && jscs . -c .jscs.js",
-    "spec": "mocha --opts spec/mocha.opts spec/",
+    "spec": "mocha -R spec --opts spec/mocha.opts spec/",
     "bench": "matcha benchmark/*.js",
     "cover": "istanbul cover _mocha --opts spec/mocha.opts",
     "coveralls": "npm i coveralls && npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
