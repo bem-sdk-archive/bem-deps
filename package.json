@@ -18,7 +18,9 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "babel-polyfill": "6.3.14"
+  },
   "devDependencies": {
     "babel-cli": "6.3.17",
     "babel-core": "6.3.26",

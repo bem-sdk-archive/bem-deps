@@ -1,3 +1,5 @@
+import { indx } from '../../lib/';
+
 import { findIndex } from '../../spec/utils';
 import { expect } from 'chai';
 
