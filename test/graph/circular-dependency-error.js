@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import СircularDependencyError from '../../lib/graph/circular-dependency-error';
 
-describe.only('`object-set`', function() {
+describe('СircularDependencyError', function() {
     var loop = [
         { entity: { block: 'A' } },
         { entity: { block: 'B' } },
