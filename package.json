@@ -20,7 +20,8 @@
   },
   "main": "./lib/index.js",
   "dependencies": {
-    "babel-polyfill": "6.3.14"
+    "babel-polyfill": "6.3.14",
+    "es6-error": "2.0.2"
   },
   "devDependencies": {
     "babel-cli": "6.5.1",

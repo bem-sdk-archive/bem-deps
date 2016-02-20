@@ -4,7 +4,7 @@ import BemEntity from '../../lib/bem/bem-entity';
 
 describe('`bem-entity`', function() {
     describe('errors', function() {
-        it('should provide `block` field', function() {
+        it('should throw error for if entity object is not valid', function() {
             expect(function () { new BemEntity({ elem: 'elem' }); })
                 .to.be.throw('This is not valid BEM entity: the field `block` is undefined.');
         });
@@ -115,18 +115,28 @@ describe('`bem-entity`', function() {
     });
 
     describe('toString()', function() {
-        it('should retur id', function() {
+        it('should return id', function() {
             const entity = new BemEntity({ block: 'block' });
 
             expect(entity.toString()).to.be.equal(entity.id);
         });
     });
 
+    describe('valueOf()', function() {
+        it('should return entity object', function() {
+            const obj = { block: 'block' };
+            const entity = new BemEntity(obj);
+
+            expect(entity.valueOf()).to.be.deep.equal(obj);
+        });
+    });
+
     describe('is()', function() {
         it('should detect equal block', function() {
-            const entity = new BemEntity({ block: 'block' });
+            const entity1 = new BemEntity({ block: 'block' });
+            const entity2 = new BemEntity({ block: 'block' });
 
-            expect(entity.is(entity)).to.be.true;
+            expect(entity1.is(entity2)).to.be.true;
         });
 
         it('should not detect another block', function() {
