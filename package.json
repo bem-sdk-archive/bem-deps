@@ -20,23 +20,22 @@
   },
   "main": "./lib/index.js",
   "dependencies": {
-    "babel-polyfill": "6.3.14",
-    "es6-error": "2.0.2"
+    "babel-polyfill": "6.7.2",
+    "es6-error": "2.1.0",
+    "hash-set": "1.0.0"
   },
   "devDependencies": {
-    "babel-cli": "6.5.1",
-    "babel-core": "6.5.2",
-    "babel-plugin-add-module-exports": "0.1.2",
-    "babel-preset-es2015-loose": "7.0.0",
-    "babel-preset-stage-0": "6.5.0",
-    "babel-register": "6.5.2",
+    "ava": "0.13.0",
+    "babel-cli": "6.6.5",
+    "babel-eslint": "5.0.0",
+    "babel-preset-nodejs-lts": "1.2.1",
+    "babel-register": "6.6.5",
     "bem-naming": "0.5.1",
     "chai": "3.5.0",
     "isparta": "4.0.0",
-    "jscs": "1.13.1",
-    "jshint": "2.8.0",
-    "lodash": "3.10.1",
-    "mocha": "2.3.4"
+    "jshint": "2.9.1",
+    "lodash": "4.6.1",
+    "mocha": "2.4.5"
   },
   "scripts": {
     "test": "npm run lint && npm run spec && npm run unit-test",
@@ -45,5 +44,10 @@
     "unit-test": "mocha test/ -R spec --opts spec/mocha.opts",
     "cover": "babel-node node_modules/isparta/bin/isparta cover --report text --report html node_modules/mocha/bin/_mocha -- spec/ test/ --opts spec/mocha.opts",
     "coveralls": "npm i coveralls && babel-node node_modules/isparta/bin/isparta cover --report lcovonly node_modules/mocha/bin/_mocha -- spec/ test/ --opts && cat ./coverage/lcov.info | coveralls"
+  },
+  "ava": {
+    "require": [
+      "babel-register"
+    ]
   }
 }

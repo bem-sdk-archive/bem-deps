@@ -4,7 +4,7 @@ import BemEntity from '../../lib/bem/bem-entity';
 import BemEntityTech from '../../lib/bem/bem-entity-tech';
 import DependencyMap from '../../lib/graph/dependency-map';
 
-describe.only('DependencyMap', function() {
+describe('DependencyMap', function() {
     let dependencyMap;
 
     beforeEach(function () {
