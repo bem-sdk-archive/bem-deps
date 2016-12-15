@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "@bem/entity-name": "^1.1.0",
-    "bem-decl": "0.3.0",
+    "bem-decl": "bem-sdk/bem-decl#issue-81",
     "bem-graph": "0.0.3",
     "bem-naming": "1.0.1",
     "bem-walk": "1.0.0-1",
