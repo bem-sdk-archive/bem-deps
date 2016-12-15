@@ -3,10 +3,9 @@
 const test = require('ava');
 const parser = require('../../../lib/formats/deps.js/parser');
 
-const key = (v) => `${v.entity.id}${v.tech ? '.' + v.tech : ''}`;
 const parse = (z) => {
     const res = parser(z);
-    return res.map(v => `${key(v.vertex)} ${v.ordered ? '=>' : '->'} ${key(v.dependOn)}`);
+    return res.map(v => `${v.vertex.id} ${v.ordered ? '=>' : '->'} ${v.dependOn.id}`);
 };
 
 test('should resolve empty', t => {
@@ -117,6 +116,35 @@ test('should use block and elem fields in objects as context', t => {
     ]);
 });
 
+test('should use block, elem and mod fields in objects as context', t => {
+    t.deepEqual(parse([{
+        entity: { block: 'be' },
+        data: [{
+            block: 'ba',
+            elem: 'ea',
+            mod: 'em',
+            shouldDeps: [{ elem: 'e2' }]
+        }]
+    }]), [
+        'ba__ea_em -> ba__e2'
+    ]);
+});
+
+test('should use block, elem and mod fields in objects as context', t => {
+    t.deepEqual(parse([{
+        entity: { block: 'be' },
+        data: [{
+            block: 'ba',
+            elem: 'ea',
+            mod: 'em',
+            val: 'ev',
+            shouldDeps: [{ elem: 'e2' }]
+        }]
+    }]), [
+        'ba__ea_em_ev -> ba__e2'
+    ]);
+});
+
 test('should resolve elems with noDeps', t => {
     t.deepEqual(parse([{
         entity: { block: 'be' },
@@ -132,5 +160,20 @@ test('should resolve elems with noDeps and remove if needed', t => {
         data: [{ shouldDeps: { elem: ['e1', 'e2'] }, noDeps: { elem: 'e2' } }]
     }]), [
         'be -> be__e1'
+    ]);
+});
+
+test('should skip duplicates', t => {
+    t.deepEqual(parse([{
+        entity: { block: 'be' },
+        data: [
+            { shouldDeps: { elem: ['e1', 'e2'] }, mustDeps: { elem: ['e3', 'e4'] } },
+            { shouldDeps: { elem: ['e1', 'e2'] }, mustDeps: { elem: ['e3', 'e4'] } },
+        ]
+    }]), [
+        'be => be__e3',
+        'be => be__e4',
+        'be -> be__e1',
+        'be -> be__e2',
     ]);
 });

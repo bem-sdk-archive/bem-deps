@@ -22,8 +22,8 @@
     "lib/**"
   ],
   "dependencies": {
+    "@bem/entity-name": "^1.1.0",
     "bem-decl": "0.3.0",
-    "bem-entity-name": "0.0.2",
     "bem-graph": "0.0.3",
     "bem-naming": "1.0.1",
     "bem-walk": "1.0.0-1",
