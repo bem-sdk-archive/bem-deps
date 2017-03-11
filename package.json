@@ -28,28 +28,37 @@
     "bem-walk": "1.0.0-1",
     "debug": "^2.2.0",
     "mz": "^2.4.0",
-    "node-eval": "^1.0.3"
+    "node-eval": "^1.0.3",
+    "es6-error": "3.0.0",
+    "hash-set": "1.0.0",
+    "ho-iter": "0.3.0",
+    "lodash": "4.12.0"
   },
   "devDependencies": {
     "ava": "^0.15.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
+    "eslint": "^3.12.0",
+    "eslint-config-pedant": "^0.7.0",
     "jscs": "^3.0.3",
     "jshint": "^2.9.2",
     "mock-fs": "^3.11.0",
     "nyc": "^6.4.4",
+    "sinon": "^1.17.6",
     "stream-to-array": "^2.3.0",
     "through2": "^2.0.1"
   },
   "scripts": {
     "pretest": "npm run lint",
     "test": "nyc ava",
-    "lint": "jshint . && jscs . -c .jscs.js",
+    "lint": "eslint ./lib && cd spec && eslint . && cd ../test && eslint .",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "ava": {
+    "require": "./test/.ava.js",
     "files": [
-      "test/**/*.test.js"
+      "test/**/*.test.js",
+      "spec/**/*.spec.js"
     ],
     "source": [
       "lib/**/*.js"
